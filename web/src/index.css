@@ -1,0 +1,486 @@
+/* Global Styles */
+:root {
+  --primary-color: #333;
+  --secondary-color: #666;
+  --accent-color: #007bff;
+  --background-color: #fff;
+  --border-color: #eaeaea;
+  --text-color: #333;
+  --text-light: #666;
+  --white: #fff;
+  --gray: #f5f5f5;
+  --success-color: #28a745;
+  --error-color: #dc3545;
+  --warning-color: #ffc107;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-color);
+  line-height: 1.6;
+  background-color: var(--background-color);
+}
+
+.container {
+  width: 100%;
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+/* Links */
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* Buttons */
+button {
+  background-color: var(--accent-color);
+  color: var(--white);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Forms */
+input, textarea, select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Layout */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+/* Loading and Error States */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+
+.not-found {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: var(--text-light);
+}
+
+/* ========================================
+ * Markdown Content Styles
+ * Compact spacing optimized for notes
+ * Reference: tmp/memos implementation
+ * ======================================== */
+
+.markdown-content {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-color);
+  min-width: 0;
+  overflow-x: visible;
+  /* Don't break words globally - let individual elements handle it */
+}
+
+/* First/Last Child Normalization */
+.markdown-content > :first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-content > :last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Block Elements - Compact spacing */
+.markdown-content p,
+.markdown-content blockquote,
+.markdown-content ul,
+.markdown-content ol,
+.markdown-content dl,
+.markdown-content table,
+.markdown-content pre,
+.markdown-content hr {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+/* Headings */
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-content h1 {
+  font-size: 2em;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.25rem;
+}
+
+.markdown-content h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.25rem;
+}
+
+.markdown-content h3 {
+  font-size: 1.25em;
+}
+
+.markdown-content h4 {
+  font-size: 1em;
+}
+
+.markdown-content h5 {
+  font-size: 0.875em;
+}
+
+.markdown-content h6 {
+  font-size: 0.85em;
+  color: var(--text-light);
+}
+
+/* Paragraphs */
+.markdown-content p {
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  /* Allow paragraphs to wrap, but don't force it */
+}
+
+/* Links */
+.markdown-content a {
+  color: var(--accent-color);
+  text-decoration: underline;
+  transition: opacity 150ms;
+}
+
+.markdown-content a:hover {
+  opacity: 0.8;
+}
+
+/* Lists */
+.markdown-content ul,
+.markdown-content ol {
+  padding-left: 1.5em;
+  list-style-position: outside;
+}
+
+.markdown-content ul {
+  list-style-type: disc;
+}
+
+.markdown-content ol {
+  list-style-type: decimal;
+}
+
+/* Task list items - remove default list styling */
+.markdown-content .task-list-item {
+  list-style-type: none;
+}
+
+/* Task list checkboxes - use negative margin for proper alignment */
+.markdown-content .task-list-item > input[type="checkbox"] {
+  margin: 0 0.2em 0.2em 0em;
+  vertical-align: text-bottom;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+/* Paragraphs inside task items should not have extra margins */
+.markdown-content .task-list-item > p {
+  display: inline;
+  margin: 0;
+}
+
+/* Task list containers - override ul padding to align with headings */
+.markdown-content .contains-task-list {
+  list-style: none;
+  padding-left: 0 !important;
+}
+
+/* Nested task lists get proper indentation */
+.markdown-content .task-list-item .contains-task-list {
+  padding-left: 1.5em;
+}
+
+.markdown-content li {
+  margin-top: 0.125rem;
+  line-height: 1.5;
+}
+
+.markdown-content li > p {
+  margin-bottom: 0.125rem;
+}
+
+.markdown-content li > ul,
+.markdown-content li > ol {
+  margin-top: 0.125rem;
+  margin-bottom: 0.125rem;
+}
+
+.markdown-content li:first-child {
+  margin-top: 0;
+}
+
+.markdown-content li + li {
+  margin-top: 0.125rem;
+}
+
+/* Code (inline and blocks) */
+.markdown-content code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.875em;
+  background: var(--gray);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+/* Inline code */
+.markdown-content .markdown-inline-code {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', Courier, monospace;
+  font-size: 0.875em;
+  background: var(--gray);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  color: #e83e8c;
+}
+
+/* Code blocks */
+.markdown-content .markdown-code-block {
+  position: relative;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', Courier, monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  background: #f6f8fa;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  padding: 16px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.markdown-content .markdown-code-block .code-language {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 0.75rem;
+  color: #6a737d;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.markdown-content .markdown-code-block code {
+  display: block;
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  border-radius: 0;
+  color: inherit;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.markdown-content pre {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Courier New', Courier, monospace;
+  font-size: 0.875rem;
+  background: var(--gray);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  white-space: pre;
+  /* Don't wrap code blocks - let them scroll */
+}
+
+.markdown-content pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  border-radius: 0;
+}
+
+/* Blockquotes */
+.markdown-content blockquote {
+  padding: 0 0.75rem;
+  color: var(--text-light);
+  border-left: 0.25rem solid var(--border-color);
+}
+
+.markdown-content blockquote > :first-child {
+  margin-top: 0;
+}
+
+.markdown-content blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* Horizontal Rules */
+.markdown-content hr {
+  height: 0.25em;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Tables */
+.markdown-content table {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  overflow-x: visible;
+  /* Prevent table from wrapping */
+  white-space: nowrap;
+}
+
+.markdown-content table th,
+.markdown-content table td {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--border-color);
+  white-space: nowrap;
+  /* Prevent cell content from wrapping */
+}
+
+.markdown-content table th {
+  font-weight: 600;
+  background: var(--gray);
+}
+
+.markdown-content table tr {
+  background: transparent;
+  border-top: 1px solid var(--border-color);
+}
+
+.markdown-content table tr:nth-child(2n) {
+  background: var(--gray);
+  opacity: 0.5;
+}
+
+/* Images */
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+/* Embedded Content (iframes, videos) */
+.markdown-content iframe {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-color);
+}
+
+/* Inline Elements */
+.markdown-content strong {
+  font-weight: 600;
+}
+
+.markdown-content em {
+  font-style: italic;
+}
+
+.markdown-content code,
+.markdown-content strong,
+.markdown-content em,
+.markdown-content a {
+  vertical-align: baseline;
+}
+
+/* Strikethrough (GFM) */
+.markdown-content del {
+  text-decoration: line-through;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 10px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+}

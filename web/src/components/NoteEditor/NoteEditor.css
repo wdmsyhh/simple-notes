@@ -1,0 +1,543 @@
+/* NoteEditor Styles - Reference memos design */
+
+/* Hidden file input - completely hidden from view */
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.note-editor {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.note-editor.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.note-editor-title-input {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  background: #ffffff;
+  color: #111827;
+  transition: all 0.2s ease;
+}
+
+.note-editor-title-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.note-editor-summary-input {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #ffffff;
+  color: #111827;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 60px;
+  transition: all 0.2s ease;
+}
+
+.note-editor-summary-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.note-editor-content {
+  width: 100%;
+  min-height: 200px;
+  max-height: 600px;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  resize: vertical;
+  font-size: 14px;
+  line-height: 1.6;
+  background: #ffffff;
+  color: #111827;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  overflow: auto;
+}
+
+.note-editor-content:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.note-editor-toolbar {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 47px;
+}
+
+.note-editor-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.note-editor-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.note-editor-button {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  writing-mode: horizontal-tb;
+  white-space: nowrap;
+  height: 31px;
+  box-sizing: border-box;
+}
+
+.note-editor-button:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.note-editor-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.note-editor-button-primary {
+  background: #3b82f6;
+  color: #ffffff;
+  border-color: #3b82f6;
+}
+
+.note-editor-button-primary:hover:not(:disabled) {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.note-editor-button-ghost {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  padding: 6px 12px;
+}
+
+.note-editor-button-ghost:hover:not(:disabled) {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.note-editor-select {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 31px;
+  box-sizing: border-box;
+  margin: 0;
+  vertical-align: middle;
+}
+
+.note-editor-select-category {
+  min-width: 100px;
+  width: auto;
+}
+
+.note-editor-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.note-editor-tag-select-wrapper {
+  position: relative;
+}
+
+.note-editor-tag-select-button {
+  min-width: 100px;
+}
+
+.note-editor-tag-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.note-editor-tag-dropdown-empty {
+  padding: 12px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.note-editor-tag-item-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  transition: background-color 0.2s ease;
+}
+
+.note-editor-tag-item-wrapper:hover {
+  background-color: #f9fafb;
+}
+
+.note-editor-tag-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  cursor: pointer;
+}
+
+.note-editor-tag-item input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.note-editor-tag-item span {
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+}
+
+.note-editor-tag-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.note-editor-tag-action-button {
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.note-editor-tag-action-button:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+/* Attachment List Styles - Reference memos design */
+.note-editor-attachment-list {
+  margin-top: 12px;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: rgba(243, 244, 246, 0.2);
+  overflow: hidden;
+}
+
+.note-editor-attachment-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 1px solid #e5e7eb;
+  background: rgba(243, 244, 246, 0.3);
+}
+
+.note-editor-attachment-header-icon {
+  width: 14px;
+  height: 14px;
+  color: #6b7280;
+}
+
+.note-editor-attachment-header-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.note-editor-attachment-items {
+  padding: 4px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.note-editor-attachment-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.note-editor-attachment-item:hover {
+  border-color: #e5e7eb;
+  background: rgba(243, 244, 246, 0.2);
+}
+
+.note-editor-attachment-item-thumbnail {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(243, 244, 246, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.note-editor-attachment-item-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.note-editor-attachment-item-thumbnail-icon {
+  width: 14px;
+  height: 14px;
+  color: #6b7280;
+}
+
+.note-editor-attachment-item-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.note-editor-attachment-item-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.note-editor-attachment-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.note-editor-attachment-item-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.note-editor-attachment-item-button {
+  padding: 2px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.note-editor-attachment-item-button:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+.note-editor-attachment-item-button-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.note-editor-attachment-item-uploading {
+  font-size: 11px;
+  color: #3b82f6;
+}
+
+/* Create Category Modal */
+.create-category-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.create-category-modal {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.create-category-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.create-category-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.create-category-modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.create-category-modal-close:hover {
+  color: #333;
+}
+
+.create-category-modal-body {
+  padding: 20px;
+}
+
+.create-category-modal-body label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.create-category-modal-body input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.create-category-modal-body input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.create-category-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.create-category-btn-primary,
+.create-category-btn-cancel {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.create-category-btn-primary {
+  background: #3b82f6;
+  color: white;
+  border: none;
+}
+
+.create-category-btn-primary:hover {
+  background: #2563eb;
+}
+
+.create-category-btn-cancel {
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.create-category-btn-cancel:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}

@@ -1,0 +1,16 @@
+# temp folder
+tmp
+
+# Frontend asset
+web/dist
+
+# Build artifacts
+build/
+bin/
+notes
+
+# Jetbrains
+.idea
+
+dist
+

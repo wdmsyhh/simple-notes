@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/wdmsyhh/simple-notes/proto/gen/api/v1";
+
+// AttachmentService 处理附件相关操作的服务
+service AttachmentService {
+  // CreateAttachment 创建新附件
+  rpc CreateAttachment(CreateAttachmentRequest) returns (Attachment);
+  
+  // ListAttachments 列出所有附件
+  rpc ListAttachments(ListAttachmentsRequest) returns (ListAttachmentsResponse);
+  
+  // GetAttachment 根据名称返回附件
+  rpc GetAttachment(GetAttachmentRequest) returns (Attachment);
+  
+  // DeleteAttachment 根据名称删除附件
+  rpc DeleteAttachment(DeleteAttachmentRequest) returns (google.protobuf.Empty);
+  
+  // UpdateAttachment 更新附件（例如，将其链接到笔记）
+  rpc UpdateAttachment(UpdateAttachmentRequest) returns (Attachment);
+}
+
+// Attachment 附件消息
+message Attachment {
+  // 附件名称，格式：attachments/{attachment}
+  string name = 1;
+  
+  // 创建时间戳
+  google.protobuf.Timestamp create_time = 2;
+  
+  // 文件名
+  string filename = 3;
+  
+  // 仅输入。附件内容
+  bytes content = 4;
+  
+  // MIME类型
+  string type = 5;
+  
+  // 仅输出。附件大小（字节）
+  int64 size = 6;
+  
+  // 可选。关联的笔记，格式：notes/{note}
+  string note_id = 7;
+}
+
+// CreateAttachmentRequest 创建附件请求
+message CreateAttachmentRequest {
+  // 必需。要创建的附件
+  Attachment attachment = 1;
+  
+  // 可选。要使用的附件ID
+  string attachment_id = 2;
+}
+
+// ListAttachmentsRequest 列出附件请求
+message ListAttachmentsRequest {
+  // 可选。返回的最大附件数量
+  int32 page_size = 1;
+  
+  // 可选。分页令牌
+  string page_token = 2;
+  
+  // 可选。按note_id过滤
+  string note_id = 3;
+}
+
+// ListAttachmentsResponse 列出附件响应
+message ListAttachmentsResponse {
+  // 附件列表
+  repeated Attachment attachments = 1;
+  
+  // 下一页的令牌
+  string next_page_token = 2;
+  
+  // 附件总数
+  int32 total_size = 3;
+}
+
+// GetAttachmentRequest 获取附件请求
+message GetAttachmentRequest {
+  // 必需。附件名称，格式：attachments/{attachment}
+  string name = 1;
+}
+
+// DeleteAttachmentRequest 删除附件请求
+message DeleteAttachmentRequest {
+  // 必需。附件名称，格式：attachments/{attachment}
+  string name = 1;
+}
+
+// UpdateAttachmentRequest 更新附件请求
+message UpdateAttachmentRequest {
+  // 必需。要更新的附件
+  Attachment attachment = 1;
+  
+  // 可选。字段掩码，指定要更新的字段
+  google.protobuf.FieldMask update_mask = 2;
+}
+

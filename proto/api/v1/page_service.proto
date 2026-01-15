@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "store/note.proto";
+
+option go_package = "github.com/wdmsyhh/simple-notes/proto/gen/api/v1";
+
+// PageService 处理页面相关操作的服务
+service PageService {
+  // ListPages 返回页面列表
+  rpc ListPages(ListPagesRequest) returns (ListPagesResponse);
+  
+  // GetPage 根据ID返回单个页面
+  rpc GetPage(GetPageRequest) returns (store.Page);
+  
+  // CreatePage 创建新页面
+  rpc CreatePage(CreatePageRequest) returns (store.Page);
+  
+  // UpdatePage 更新现有页面
+  rpc UpdatePage(UpdatePageRequest) returns (store.Page);
+  
+  // DeletePage 删除页面
+  rpc DeletePage(DeletePageRequest) returns (google.protobuf.Empty);
+  
+  // GetPageBySlug 根据slug返回页面
+  rpc GetPageBySlug(GetPageBySlugRequest) returns (store.Page);
+}
+
+// 页面请求和响应消息
+
+// ListPagesRequest 列出页面请求
+message ListPagesRequest {
+  // 是否包含未发布的页面
+  bool include_unpublished = 1;
+}
+
+// ListPagesResponse 列出页面响应
+message ListPagesResponse {
+  // 页面列表
+  repeated store.Page pages = 1;
+}
+
+// GetPageRequest 获取页面请求
+message GetPageRequest {
+  // 资源名称，格式：pages/{page}
+  string name = 1;
+}
+
+// CreatePageRequest 创建页面请求
+message CreatePageRequest {
+  // 要创建的页面
+  store.Page page = 1;
+}
+
+// UpdatePageRequest 更新页面请求
+message UpdatePageRequest {
+  // 要更新的页面
+  store.Page page = 1;
+  // 字段掩码，指定要更新的字段
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+// DeletePageRequest 删除页面请求
+message DeletePageRequest {
+  // 资源名称，格式：pages/{page}
+  string name = 1;
+}
+
+// GetPageBySlugRequest 根据slug获取页面请求
+message GetPageBySlugRequest {
+  // slug标识符
+  string slug = 1;
+}

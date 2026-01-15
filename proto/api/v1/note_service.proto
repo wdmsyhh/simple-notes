@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "store/note.proto";
+
+option go_package = "github.com/wdmsyhh/simple-notes/proto/gen/api/v1";
+
+// NoteService 处理笔记相关操作的服务
+service NoteService {
+  // ListNotes 返回分页的笔记列表
+  rpc ListNotes(ListNotesRequest) returns (ListNotesResponse);
+  
+  // GetNote 根据ID返回单个笔记
+  rpc GetNote(GetNoteRequest) returns (store.Note);
+  
+  // CreateNote 创建新笔记
+  rpc CreateNote(CreateNoteRequest) returns (store.Note);
+  
+  // UpdateNote 更新现有笔记
+  rpc UpdateNote(UpdateNoteRequest) returns (store.Note);
+  
+  // DeleteNote 删除笔记
+  rpc DeleteNote(DeleteNoteRequest) returns (google.protobuf.Empty);
+  
+  // GetNoteBySlug 根据slug返回笔记
+  rpc GetNoteBySlug(GetNoteBySlugRequest) returns (store.Note);
+}
+
+// 笔记请求和响应消息
+
+// ListNotesRequest 列出笔记请求
+message ListNotesRequest {
+  // 页码
+  int32 page = 1;
+  // 每页大小
+  int32 page_size = 2;
+  // 分类ID（可选）
+  string category_id = 3;
+  // 标签ID（可选）
+  string tag_id = 4;
+  // 搜索关键词（可选）
+  string search = 5;
+  // 排序字段（可选）
+  string sort_by = 6;
+  // 是否降序排序
+  bool sort_desc = 7;
+}
+
+// ListNotesResponse 列出笔记响应
+message ListNotesResponse {
+  // 笔记列表
+  repeated store.Note notes = 1;
+  // 总数
+  int32 total = 2;
+  // 当前页码
+  int32 page = 3;
+  // 每页大小
+  int32 page_size = 4;
+  // 总页数
+  int32 total_pages = 5;
+}
+
+// GetNoteRequest 获取笔记请求
+message GetNoteRequest {
+  // 资源名称，格式：notes/{note}
+  string name = 1;
+}
+
+// CreateNoteRequest 创建笔记请求
+message CreateNoteRequest {
+  // 要创建的笔记
+  store.Note note = 1;
+}
+
+// UpdateNoteRequest 更新笔记请求
+message UpdateNoteRequest {
+  // 要更新的笔记
+  store.Note note = 1;
+  // 字段掩码，指定要更新的字段
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+// DeleteNoteRequest 删除笔记请求
+message DeleteNoteRequest {
+  // 资源名称，格式：notes/{note}
+  string name = 1;
+}
+
+// GetNoteBySlugRequest 根据slug获取笔记请求
+message GetNoteBySlugRequest {
+  // slug标识符
+  string slug = 1;
+}

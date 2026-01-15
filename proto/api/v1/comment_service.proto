@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "store/note.proto";
+
+option go_package = "github.com/wdmsyhh/simple-notes/proto/gen/api/v1";
+
+// CommentService 处理评论相关操作的服务
+service CommentService {
+  // ListComments 返回笔记的评论列表
+  rpc ListComments(ListCommentsRequest) returns (ListCommentsResponse);
+  
+  // CreateComment 创建新评论
+  rpc CreateComment(CreateCommentRequest) returns (store.Comment);
+  
+  // UpdateComment 更新现有评论
+  rpc UpdateComment(UpdateCommentRequest) returns (store.Comment);
+  
+  // DeleteComment 删除评论
+  rpc DeleteComment(DeleteCommentRequest) returns (google.protobuf.Empty);
+  
+  // ApproveComment 审核通过评论
+  rpc ApproveComment(ApproveCommentRequest) returns (store.Comment);
+}
+
+// 评论请求和响应消息
+
+// ListCommentsRequest 列出评论请求
+message ListCommentsRequest {
+  // 笔记ID
+  string note_id = 1;
+  // 页码
+  int32 page = 2;
+  // 每页大小
+  int32 page_size = 3;
+  // 是否包含未审核的评论
+  bool include_unapproved = 4;
+}
+
+// ListCommentsResponse 列出评论响应
+message ListCommentsResponse {
+  // 评论列表
+  repeated store.Comment comments = 1;
+  // 总数
+  int32 total = 2;
+}
+
+// CreateCommentRequest 创建评论请求
+message CreateCommentRequest {
+  // 要创建的评论
+  store.Comment comment = 1;
+}
+
+// UpdateCommentRequest 更新评论请求
+message UpdateCommentRequest {
+  // 要更新的评论
+  store.Comment comment = 1;
+  // 字段掩码，指定要更新的字段
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+// DeleteCommentRequest 删除评论请求
+message DeleteCommentRequest {
+  // 资源名称，格式：comments/{comment}
+  string name = 1;
+}
+
+// ApproveCommentRequest 审核评论请求
+message ApproveCommentRequest {
+  // 资源名称，格式：comments/{comment}
+  string name = 1;
+}

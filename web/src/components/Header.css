@@ -1,0 +1,161 @@
+/* Header Styles */
+.header {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  position: relative;
+}
+
+/* Logo */
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.logo-placeholder {
+  width: 120px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  visibility: hidden;
+}
+
+/* Header Actions */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-name {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.logout-button,
+.login-link {
+  padding: 0.125rem 0.25rem;
+  background-color: #47698C;
+  color: white !important;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.75rem !important;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  line-height: 1.5;
+  display: inline-block;
+}
+
+.header-actions .login-link {
+  font-size: 0.65rem !important;
+}
+
+.logout-button:hover,
+.login-link:hover {
+  background-color: #3a5670;
+  color: white !important;
+}
+
+.logo a {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.logo a:hover {
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* Navigation */
+.nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav ul {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav a {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav a:hover {
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* Search */
+.search {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.search input {
+  width: 250px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #eaeaea;
+  border-radius: 4px;
+  font-size: 0.9375rem;
+}
+
+.search button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Header */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem 0;
+    gap: 1rem;
+  }
+
+  .nav ul {
+    gap: 1rem;
+  }
+
+  .search input {
+    width: 200px;
+  }
+}
+
+@media (max-width: 576px) {
+  .nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .search input {
+    width: 150px;
+  }
+}

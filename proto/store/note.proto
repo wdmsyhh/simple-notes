@@ -1,0 +1,207 @@
+syntax = "proto3";
+
+package store;
+
+option go_package = "github.com/wdmsyhh/simple-notes/proto/gen/store";
+
+// NoteVisibility 笔记可见性枚举
+enum NoteVisibility {
+  // 未指定
+  NOTE_VISIBILITY_UNSPECIFIED = 0;
+  // 公开
+  NOTE_VISIBILITY_PUBLIC = 1;
+  // 私有
+  NOTE_VISIBILITY_PRIVATE = 2;
+}
+
+// Note 笔记消息
+message Note {
+  // 资源名称，格式：notes/{note}
+  string name = 1;
+  // 笔记ID
+  int64 id = 2;
+  // 标题
+  string title = 3;
+  // URL友好的标识符
+  string slug = 4;
+  // 内容
+  string content = 5;
+  // 摘要
+  string summary = 6;
+  // 分类ID
+  string category_id = 7;
+  // 标签ID列表
+  repeated string tag_ids = 8;
+  // 是否已发布
+  bool published = 9;
+  // 作者ID
+  string author_id = 10;
+  // 创建时间（Unix时间戳，秒）
+  int64 created_at = 11;
+  // 更新时间（Unix时间戳，秒）
+  int64 updated_at = 12;
+  // 发布时间（Unix时间戳，秒）
+  int64 published_at = 13;
+  // 封面图片URL
+  string cover_image = 14;
+  // 阅读时间（分钟）
+  int32 reading_time = 15;
+  // 浏览次数
+  int32 view_count = 16;
+  // 可见性
+  NoteVisibility visibility = 17;
+}
+
+// Category 分类消息
+message Category {
+  // 资源名称，格式：categories/{category}
+  string name = 1;
+  // 分类ID
+  int64 id = 2;
+  // 分类名称
+  string name_text = 3;
+  // URL友好的标识符
+  string slug = 4;
+  // 描述
+  string description = 5;
+  // 父分类ID
+  int64 parent_id = 6;
+  // 排序顺序
+  int32 order = 7;
+  // 是否可见
+  bool visible = 8;
+  // 创建时间（Unix时间戳，秒）
+  int64 created_at = 9;
+  // 更新时间（Unix时间戳，秒）
+  int64 updated_at = 10;
+}
+
+// Tag 标签消息
+message Tag {
+  // 资源名称，格式：tags/{tag}
+  string name = 1;
+  // 标签ID
+  int64 id = 2;
+  // 标签名称
+  string name_text = 3;
+  // URL友好的标识符
+  string slug = 4;
+  // 描述
+  string description = 5;
+  // 使用次数
+  int32 count = 6;
+  // 创建时间（Unix时间戳，秒）
+  int64 created_at = 7;
+  // 更新时间（Unix时间戳，秒）
+  int64 updated_at = 8;
+}
+
+// UserRole 用户角色枚举
+enum UserRole {
+  // 未指定
+  USER_ROLE_UNSPECIFIED = 0;
+  // 主机（系统管理员）
+  USER_ROLE_HOST = 1;
+  // 管理员
+  USER_ROLE_ADMIN = 2;
+  // 普通用户
+  USER_ROLE_USER = 3;
+}
+
+// User 用户消息
+message User {
+  // 资源名称，格式：users/{user}
+  string name = 1;
+  // 用户ID
+  int64 id = 2;
+  // 用户名
+  string username = 3;
+  // 邮箱
+  string email = 4;
+  // 密码哈希
+  string password_hash = 5;
+  // 昵称
+  string nickname = 6;
+  // 头像URL
+  string avatar = 7;
+  // 个人简介
+  string bio = 8;
+  // 用户角色
+  UserRole role = 9;
+  // 创建时间（Unix时间戳，秒）
+  int64 created_at = 10;
+  // 更新时间（Unix时间戳，秒）
+  int64 updated_at = 11;
+}
+
+// Comment 评论消息
+message Comment {
+  // 资源名称，格式：comments/{comment}
+  string name = 1;
+  // 评论ID
+  int64 id = 2;
+  // 笔记ID
+  string note_id = 3;
+  // 作者名称
+  string author = 4;
+  // 作者邮箱
+  string email = 5;
+  // 评论内容
+  string content = 6;
+  // 父评论ID（用于回复）
+  int64 parent_id = 7;
+  // 是否已审核
+  bool approved = 8;
+  // 创建时间（Unix时间戳，秒）
+  int64 created_at = 9;
+  // 更新时间（Unix时间戳，秒）
+  int64 updated_at = 10;
+}
+
+// Page 页面消息
+message Page {
+  // 资源名称，格式：pages/{page}
+  string name = 1;
+  // 页面ID
+  int64 id = 2;
+  // 标题
+  string title = 3;
+  // URL友好的标识符
+  string slug = 4;
+  // 内容
+  string content = 5;
+  // 是否已发布
+  bool published = 6;
+  // 是否在导航中显示
+  bool in_navigation = 7;
+  // 排序顺序
+  int32 order = 8;
+  // 创建时间（Unix时间戳，秒）
+  int64 created_at = 9;
+  // 更新时间（Unix时间戳，秒）
+  int64 updated_at = 10;
+}
+
+// Attachment 附件消息
+message Attachment {
+  // 资源名称，格式：attachments/{attachment}
+  string name = 1;
+  // 附件ID
+  int64 id = 2;
+  // 文件名
+  string filename = 3;
+  // MIME类型
+  string type = 4;
+  // 文件大小（字节）
+  int64 size = 5;
+  // 文件内容（仅用于输入）
+  bytes content = 6;
+  // 关联的笔记ID（可选），格式：notes/{note}
+  string note_id = 7;
+  // 作者ID，格式：users/{user}
+  string author_id = 8;
+  // 创建时间（Unix时间戳，秒）
+  int64 created_at = 9;
+  // 更新时间（Unix时间戳，秒）
+  int64 updated_at = 10;
+}

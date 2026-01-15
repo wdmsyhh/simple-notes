@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "store/note.proto";
+
+option go_package = "github.com/wdmsyhh/simple-notes/proto/gen/api/v1";
+
+// TagService 处理标签相关操作的服务
+service TagService {
+  // ListTags 返回标签列表
+  rpc ListTags(ListTagsRequest) returns (ListTagsResponse);
+  
+  // GetTag 根据ID返回单个标签
+  rpc GetTag(GetTagRequest) returns (store.Tag);
+  
+  // CreateTag 创建新标签
+  rpc CreateTag(CreateTagRequest) returns (store.Tag);
+  
+  // UpdateTag 更新现有标签
+  rpc UpdateTag(UpdateTagRequest) returns (store.Tag);
+  
+  // DeleteTag 删除标签
+  rpc DeleteTag(DeleteTagRequest) returns (google.protobuf.Empty);
+  
+  // GetTagBySlug 根据slug返回标签
+  rpc GetTagBySlug(GetTagBySlugRequest) returns (store.Tag);
+}
+
+// 标签请求和响应消息
+
+// ListTagsRequest 列出标签请求
+message ListTagsRequest {
+  // 限制返回数量（可选）
+  int32 limit = 1;
+  // 偏移量（可选）
+  int32 offset = 2;
+}
+
+// ListTagsResponse 列出标签响应
+message ListTagsResponse {
+  // 标签列表
+  repeated store.Tag tags = 1;
+  // 总数
+  int32 total = 2;
+}
+
+// GetTagRequest 获取标签请求
+message GetTagRequest {
+  // 资源名称，格式：tags/{tag}
+  string name = 1;
+}
+
+// CreateTagRequest 创建标签请求
+message CreateTagRequest {
+  // 要创建的标签
+  store.Tag tag = 1;
+}
+
+// UpdateTagRequest 更新标签请求
+message UpdateTagRequest {
+  // 要更新的标签
+  store.Tag tag = 1;
+  // 字段掩码，指定要更新的字段
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+// DeleteTagRequest 删除标签请求
+message DeleteTagRequest {
+  // 资源名称，格式：tags/{tag}
+  string name = 1;
+}
+
+// GetTagBySlugRequest 根据slug获取标签请求
+message GetTagBySlugRequest {
+  // slug标识符
+  string slug = 1;
+}

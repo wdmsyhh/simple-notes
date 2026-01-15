@@ -1,0 +1,237 @@
+.category-manager {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  margin-bottom: 32px;
+}
+
+.category-manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.category-manager-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.category-manager-btn-create {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.category-manager-btn-create:hover {
+  background: #2563eb;
+}
+
+.category-manager-loading,
+.category-manager-error {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.category-manager-error {
+  color: #dc2626;
+  background: #fee;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.category-manager-form {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.category-manager-form h3 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.category-form-group {
+  margin-bottom: 16px;
+}
+
+.category-form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.category-form-group input[type="text"],
+.category-form-group textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.category-form-group input[type="text"]:focus,
+.category-form-group textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.category-form-group input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.category-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.category-manager-btn-primary {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.category-manager-btn-primary:hover {
+  background: #2563eb;
+}
+
+.category-manager-btn-cancel {
+  padding: 8px 16px;
+  background: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.category-manager-btn-cancel:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.category-manager-list {
+  margin-top: 24px;
+}
+
+.category-manager-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+}
+
+.category-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.category-table thead {
+  background: #f9fafb;
+}
+
+.category-table th {
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.category-table td {
+  padding: 12px;
+  font-size: 14px;
+  color: #666;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.category-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.category-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.category-status.visible {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.category-status.hidden {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.category-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.category-action-btn-edit,
+.category-action-btn-delete {
+  padding: 4px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.category-action-btn-edit {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.category-action-btn-edit:hover:not(:disabled) {
+  background: #e5e7eb;
+}
+
+.category-action-btn-edit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.category-action-btn-delete {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.category-action-btn-delete:hover {
+  background: #fecaca;
+}

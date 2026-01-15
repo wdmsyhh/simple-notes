@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "store/note.proto";
+
+option go_package = "github.com/wdmsyhh/simple-notes/proto/gen/api/v1";
+
+// UserService 处理用户相关操作的服务
+service UserService {
+  // RegisterUser 注册新用户
+  rpc RegisterUser(RegisterUserRequest) returns (store.User);
+  
+  // LoginUser 认证用户并返回认证令牌
+  rpc LoginUser(LoginUserRequest) returns (LoginUserResponse);
+  
+  // GetUser 根据ID返回单个用户
+  rpc GetUser(GetUserRequest) returns (store.User);
+  
+  // GetCurrentUser 返回当前已认证的用户
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (store.User);
+  
+  // UpdateUser 更新现有用户
+  rpc UpdateUser(UpdateUserRequest) returns (store.User);
+  
+  // DeleteUser 删除用户
+  rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty);
+  
+  // ListUsers 返回分页的用户列表
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+}
+
+// 用户请求和响应消息
+
+// RegisterUserRequest 注册用户请求
+message RegisterUserRequest {
+  // 要注册的用户信息
+  store.User user = 1;
+  // 密码（单独发送以确保安全）
+  string password = 2;
+}
+
+// LoginUserRequest 登录用户请求
+message LoginUserRequest {
+  // 用户名
+  string username = 1;
+  // 密码
+  string password = 2;
+}
+
+// LoginUserResponse 登录用户响应
+message LoginUserResponse {
+  // 用户信息
+  store.User user = 1;
+  // 认证令牌
+  string token = 2;
+}
+
+// GetUserRequest 获取用户请求
+message GetUserRequest {
+  // 资源名称，格式：users/{user}
+  string name = 1;
+}
+
+// GetCurrentUserRequest 获取当前用户请求
+message GetCurrentUserRequest {
+  // 无需参数，用户通过认证令牌识别
+}
+
+// UpdateUserRequest 更新用户请求
+message UpdateUserRequest {
+  // 要更新的用户信息
+  store.User user = 1;
+  // 字段掩码，指定要更新的字段
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+// DeleteUserRequest 删除用户请求
+message DeleteUserRequest {
+  // 资源名称，格式：users/{user}
+  string name = 1;
+}
+
+// ListUsersRequest 列出用户请求
+message ListUsersRequest {
+  // 页码
+  int32 page = 1;
+  // 每页大小
+  int32 page_size = 2;
+  // 搜索关键词（可选）
+  string search = 3;
+}
+
+// ListUsersResponse 列出用户响应
+message ListUsersResponse {
+  // 用户列表
+  repeated store.User users = 1;
+  // 总数
+  int32 total = 2;
+  // 当前页码
+  int32 page = 3;
+  // 每页大小
+  int32 page_size = 4;
+}

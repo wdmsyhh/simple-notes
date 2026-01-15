@@ -1,0 +1,288 @@
+.dashboard {
+  min-height: 100vh;
+  background-color: #fafafa;
+  width: 100%;
+}
+
+.dashboard-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.dashboard-header {
+  margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.dashboard-subtitle {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.dashboard-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 16px;
+  color: #666;
+}
+
+.note-editor-section {
+  margin-bottom: 32px;
+}
+
+/* Notes List */
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.note-card {
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 6px 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.note-card:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: #d1d5db;
+}
+
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0;
+  min-height: 0;
+  height: auto;
+  padding: 0;
+  gap: 8px;
+}
+
+.note-title {
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  height: auto;
+  min-height: 0;
+}
+
+/* Override h3 default styles to reduce height */
+.note-card h3.note-title {
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.note-title a {
+  color: #333;
+  text-decoration: none;
+  font-size: 18px;
+  line-height: 1.2;
+  display: inline-block;
+}
+
+.note-title a:hover {
+  color: #007bff;
+}
+
+.note-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  color: #999;
+  line-height: 1;
+  height: auto;
+  min-height: 0;
+}
+
+.note-visibility {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.note-time {
+  font-size: 11px;
+}
+
+.note-content {
+  color: #666;
+  font-size: 13px;
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+
+.note-content p {
+  margin: 0;
+}
+
+.note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: #f0f0f0;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #666;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.error-message {
+  padding: 16px;
+  background: #fee;
+  color: #c33;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.note-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+  padding-top: 2px;
+  border-top: 1px solid #e5e7eb;
+  justify-content: flex-end;
+}
+
+.edit-button,
+.delete-button {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  pointer-events: auto;
+  z-index: 10;
+  position: relative;
+  text-decoration: none;
+  color: #666;
+  background: transparent;
+}
+
+.edit-button:hover,
+.delete-button:hover {
+  color: #333;
+}
+
+/* Search Bar */
+.dashboard-search {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.dashboard-search-input {
+  flex: 1;
+  max-width: 400px;
+  padding: 10px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #ffffff;
+  color: #111827;
+  transition: all 0.2s ease;
+  margin: 0;
+  align-self: center;
+}
+
+.dashboard-search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dashboard-search-input::placeholder {
+  color: #9ca3af;
+}
+
+.dashboard-search-button {
+  padding: 8px 16px;
+  border: 1px solid #47698C;
+  border-radius: 6px;
+  background: #47698C;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dashboard-search-button:hover {
+  background: #3a5670;
+  border-color: #3a5670;
+}
+
+.dashboard-search-button:active {
+  background: #2d4356;
+  border-color: #2d4356;
+}
+
+/* Pagination */
+.dashboard-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+  padding: 20px 0;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}

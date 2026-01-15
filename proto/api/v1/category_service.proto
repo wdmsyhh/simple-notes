@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package api.v1;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "store/note.proto";
+
+option go_package = "github.com/wdmsyhh/simple-notes/proto/gen/api/v1";
+
+// CategoryService 处理分类相关操作的服务
+service CategoryService {
+  // ListCategories 返回分类列表
+  rpc ListCategories(ListCategoriesRequest) returns (ListCategoriesResponse);
+  
+  // GetCategory 根据ID返回单个分类
+  rpc GetCategory(GetCategoryRequest) returns (store.Category);
+  
+  // CreateCategory 创建新分类
+  rpc CreateCategory(CreateCategoryRequest) returns (store.Category);
+  
+  // UpdateCategory 更新现有分类
+  rpc UpdateCategory(UpdateCategoryRequest) returns (store.Category);
+  
+  // DeleteCategory 删除分类
+  rpc DeleteCategory(DeleteCategoryRequest) returns (google.protobuf.Empty);
+  
+  // GetCategoryBySlug 根据slug返回分类
+  rpc GetCategoryBySlug(GetCategoryBySlugRequest) returns (store.Category);
+}
+
+// 分类请求和响应消息
+
+// ListCategoriesRequest 列出分类请求
+message ListCategoriesRequest {
+  // 是否包含隐藏的分类
+  bool include_hidden = 1;
+  // 父分类ID（可选）
+  int64 parent_id = 2;
+}
+
+// ListCategoriesResponse 列出分类响应
+message ListCategoriesResponse {
+  // 分类列表
+  repeated store.Category categories = 1;
+}
+
+// GetCategoryRequest 获取分类请求
+message GetCategoryRequest {
+  // 资源名称，格式：categories/{category}
+  string name = 1;
+}
+
+// CreateCategoryRequest 创建分类请求
+message CreateCategoryRequest {
+  // 要创建的分类
+  store.Category category = 1;
+}
+
+// UpdateCategoryRequest 更新分类请求
+message UpdateCategoryRequest {
+  // 要更新的分类
+  store.Category category = 1;
+  // 字段掩码，指定要更新的字段
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+// DeleteCategoryRequest 删除分类请求
+message DeleteCategoryRequest {
+  // 资源名称，格式：categories/{category}
+  string name = 1;
+}
+
+// GetCategoryBySlugRequest 根据slug获取分类请求
+message GetCategoryBySlugRequest {
+  // slug标识符
+  string slug = 1;
+}

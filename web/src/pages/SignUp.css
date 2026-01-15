@@ -1,0 +1,137 @@
+.signup-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafa;
+}
+
+.signup-container {
+  background: #fafafa;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.signup-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.signup-subtitle {
+  text-align: center;
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  color: #666;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #666;
+  font-size: 0.875rem;
+  line-height: 2rem;
+}
+
+.form-group input {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background-color: #ffffff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.signup-button {
+  height: 40px;
+  padding: 0 16px;
+  background-color: #47698C;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.signup-button:hover:not(:disabled) {
+  background-color: #3a5670;
+}
+
+.signup-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.error-message {
+  padding: 0.75rem;
+  background-color: #fee;
+  color: #c33;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.signup-container .login-link {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.signup-container .login-link:hover {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #666;
+}
+
+.signup-container .login-link span {
+  color: #666;
+}
+
+.signup-container .login-link:hover span {
+  color: #666;
+}
+
+.login-link-text {
+  color: #007bff;
+  text-decoration: none;
+  margin-left: 0.5rem;
+  font-weight: 500;
+}
+
+.login-link-text:hover {
+  text-decoration: underline;
+}
+
