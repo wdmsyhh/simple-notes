@@ -40,9 +40,11 @@ const NoteEditorImpl: React.FC<NoteEditorProps> = ({ noteId, onSave, onCancel })
   const [showEditTag, setShowEditTag] = useState(false);
   const [editingTag, setEditingTag] = useState<Tag | null>(null);
   const [showTagDropdown, setShowTagDropdown] = useState(false);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newTagName, setNewTagName] = useState('');
   const tagDropdownRef = useRef<HTMLDivElement>(null);
+  const categoryDropdownRef = useRef<HTMLDivElement>(null);
 
   // Load categories
   useEffect(() => {
@@ -84,16 +86,19 @@ const NoteEditorImpl: React.FC<NoteEditorProps> = ({ noteId, onSave, onCancel })
       if (tagDropdownRef.current && !tagDropdownRef.current.contains(event.target as Node)) {
         setShowTagDropdown(false);
       }
+      if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(event.target as Node)) {
+        setShowCategoryDropdown(false);
+      }
     };
 
-    if (showTagDropdown) {
+    if (showTagDropdown || showCategoryDropdown) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showTagDropdown]);
+  }, [showTagDropdown, showCategoryDropdown]);
 
   // Load note if noteId is provided
   useEffect(() => {
@@ -757,11 +762,18 @@ const NoteEditorImpl: React.FC<NoteEditorProps> = ({ noteId, onSave, onCancel })
           >
             + 新建分类
           </button>
-          <div style={{ position: 'relative', display: 'inline-block' }}>
+          <div className="note-editor-category-select-wrapper" ref={categoryDropdownRef}>
             <select
               className="note-editor-select note-editor-select-category"
               value={state.categoryId}
-              onChange={handleCategoryChange}
+              onChange={(e) => {
+                handleCategoryChange(e);
+                if (e.target.value) {
+                  setShowCategoryDropdown(true);
+                } else {
+                  setShowCategoryDropdown(false);
+                }
+              }}
             >
               <option value="">选择分类</option>
               {categories.map((category) => (
@@ -770,36 +782,41 @@ const NoteEditorImpl: React.FC<NoteEditorProps> = ({ noteId, onSave, onCancel })
                 </option>
               ))}
             </select>
-            {state.categoryId && categories.length > 0 && (
-              <div style={{ display: 'inline-flex', gap: '4px', marginLeft: '4px' }}>
-                <button
-                  type="button"
-                  className="note-editor-button"
-                  onClick={() => {
-                    const category = categories.find(c => String(c.id) === state.categoryId);
-                    if (category) {
-                      handleEditCategory(category);
-                    }
-                  }}
-                  title="编辑分类"
-                  style={{ padding: '4px 8px', fontSize: '12px' }}
-                >
-                  编辑
-                </button>
-                <button
-                  type="button"
-                  className="note-editor-button"
-                  onClick={() => {
-                    const category = categories.find(c => String(c.id) === state.categoryId);
-                    if (category) {
-                      handleDeleteCategory(category);
-                    }
-                  }}
-                  title="删除分类"
-                  style={{ padding: '4px 8px', fontSize: '12px', color: '#d32f2f' }}
-                >
-                  删除
-                </button>
+            {state.categoryId && showCategoryDropdown && categories.length > 0 && (
+              <div className="note-editor-category-dropdown">
+                <div className="note-editor-category-actions">
+                  <button
+                    type="button"
+                    className="note-editor-tag-action-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const category = categories.find(c => String(c.id) === state.categoryId);
+                      if (category) {
+                        handleEditCategory(category);
+                        setShowCategoryDropdown(false);
+                      }
+                    }}
+                    title="编辑分类"
+                  >
+                    编辑
+                  </button>
+                  <button
+                    type="button"
+                    className="note-editor-tag-action-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const category = categories.find(c => String(c.id) === state.categoryId);
+                      if (category) {
+                        handleDeleteCategory(category);
+                        setShowCategoryDropdown(false);
+                      }
+                    }}
+                    title="删除分类"
+                    style={{ color: '#d32f2f' }}
+                  >
+                    删除
+                  </button>
+                </div>
               </div>
             )}
           </div>
