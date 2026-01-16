@@ -28,8 +28,6 @@ func NewUserService(store *store.Store) *UserService {
 type UserRegistrationRequest struct {
 	// Username 用户名
 	Username string `json:"username"`
-	// Email 邮箱
-	Email string `json:"email"`
 	// Password 密码
 	Password string `json:"password"`
 	// Nickname 昵称
@@ -61,15 +59,6 @@ func ValidateUserRegistrationRequest(req *UserRegistrationRequest) error {
 	usernameRegex := regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
 	if !usernameRegex.MatchString(req.Username) {
 		return errors.New("username can only contain alphanumeric characters, underscores, and hyphens")
-	}
-
-	// 验证邮箱（可选）
-	if strings.TrimSpace(req.Email) != "" {
-		// 基本邮箱格式验证
-		emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
-		if !emailRegex.MatchString(req.Email) {
-			return errors.New("invalid email format")
-		}
 	}
 
 	// 验证密码
@@ -131,7 +120,6 @@ func (s *UserService) RegisterUser(ctx context.Context, req *UserRegistrationReq
 	// 创建用户
 	user := &store.User{
 		Username:     req.Username,
-		Email:        req.Email,
 		PasswordHash: passwordHash,
 		Nickname:     req.Nickname,
 		Avatar:       req.Avatar,
@@ -174,11 +162,6 @@ func (s *UserService) GetUserByID(ctx context.Context, id uint) (*store.User, er
 // GetUserByUsername 根据用户名检索用户
 func (s *UserService) GetUserByUsername(ctx context.Context, username string) (*store.User, error) {
 	return s.store.GetUserByUsername(ctx, username)
-}
-
-// GetUserByEmail 根据邮箱检索用户
-func (s *UserService) GetUserByEmail(ctx context.Context, email string) (*store.User, error) {
-	return s.store.GetUserByEmail(ctx, email)
 }
 
 // ListUsers 检索所有用户

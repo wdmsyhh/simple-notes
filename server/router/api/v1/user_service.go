@@ -34,7 +34,6 @@ func (s *APIV1Service) RegisterUser(ctx context.Context, request *apiv1.Register
 	// 通过服务层创建用户
 	regReq := &service.UserRegistrationRequest{
 		Username: request.User.Username,
-		Email:    request.User.Email,
 		Password: request.Password,
 		Nickname: request.User.Nickname,
 		Avatar:   request.User.Avatar,
@@ -151,9 +150,6 @@ func (s *APIV1Service) UpdateUser(ctx context.Context, request *apiv1.UpdateUser
 	if request.User.Username != "" {
 		currentUser.Username = request.User.Username
 	}
-	if request.User.Email != "" {
-		currentUser.Email = request.User.Email
-	}
 	if request.User.Nickname != "" {
 		currentUser.Nickname = request.User.Nickname
 	}
@@ -253,7 +249,6 @@ func convertUserToProto(user *store.User) *storepb.User {
 		Name:         fmt.Sprintf("users/%d", user.ID),
 		Id:           int64(user.ID),
 		Username:     user.Username,
-		Email:        user.Email,
 		PasswordHash: user.PasswordHash,
 		Nickname:     user.Nickname,
 		Avatar:       user.Avatar,

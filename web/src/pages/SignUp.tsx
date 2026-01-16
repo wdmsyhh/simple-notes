@@ -54,10 +54,9 @@ const SignUp: React.FC = () => {
     setLoading(true);
 
     try {
-      // 创建用户对象（仅包含用户名，邮箱和昵称是可选的）
+      // 创建用户对象（仅包含用户名，昵称是可选的）
       const user = create(UserSchema, {
         username,
-        email: "", // 可选，可以为空
         nickname: username, // 使用用户名作为默认昵称
       });
 

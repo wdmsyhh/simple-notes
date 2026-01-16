@@ -32,8 +32,6 @@ type User struct {
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 	// Username 用户名
 	Username string `json:"username"`
-	// Email 邮箱
-	Email string `json:"email"`
 	// PasswordHash 密码哈希
 	PasswordHash string `json:"password_hash"`
 	// Nickname 昵称
@@ -48,20 +46,20 @@ type User struct {
 
 // CreateUser 在数据库中创建新用户
 func (s *Store) CreateUser(ctx context.Context, user *User) (*User, error) {
-	// 检查是否已存在相同用户名或邮箱的用户
+	// 检查是否已存在相同用户名的用户
 	var exists bool
-	query := "SELECT EXISTS(SELECT 1 FROM users WHERE username = ? OR email = ?)"
-	err := s.db.QueryRowContext(ctx, query, user.Username, user.Email).Scan(&exists)
+	query := "SELECT EXISTS(SELECT 1 FROM users WHERE username = ?)"
+	err := s.db.QueryRowContext(ctx, query, user.Username).Scan(&exists)
 	if err != nil {
 		return nil, err
 	}
 	if exists {
-		return nil, errors.New("user with this username or email already exists")
+		return nil, errors.New("user with this username already exists")
 	}
 
 	// 插入新用户
-	query = "INSERT INTO users (username, email, password_hash, nickname, avatar, bio, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
-	result, err := s.db.ExecContext(ctx, query, user.Username, user.Email, user.PasswordHash, user.Nickname, user.Avatar, user.Bio, user.Role)
+	query = "INSERT INTO users (username, password_hash, nickname, avatar, bio, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
+	result, err := s.db.ExecContext(ctx, query, user.Username, user.PasswordHash, user.Nickname, user.Avatar, user.Bio, user.Role)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +76,6 @@ func (s *Store) CreateUser(ctx context.Context, user *User) (*User, error) {
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
 		Username:     user.Username,
-		Email:        user.Email,
 		PasswordHash: user.PasswordHash,
 		Nickname:     user.Nickname,
 		Avatar:       user.Avatar,
@@ -90,14 +87,13 @@ func (s *Store) CreateUser(ctx context.Context, user *User) (*User, error) {
 // GetUserByID 根据ID检索用户
 func (s *Store) GetUserByID(ctx context.Context, id uint) (*User, error) {
 	user := &User{}
-	query := "SELECT id, created_at, updated_at, deleted_at, username, email, password_hash, nickname, avatar, bio, role FROM users WHERE id = ? AND deleted_at IS NULL"
+	query := "SELECT id, created_at, updated_at, deleted_at, username, password_hash, nickname, avatar, bio, role FROM users WHERE id = ? AND deleted_at IS NULL"
 	err := s.db.QueryRowContext(ctx, query, id).Scan(
 		&user.ID,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 		&user.DeletedAt,
 		&user.Username,
-		&user.Email,
 		&user.PasswordHash,
 		&user.Nickname,
 		&user.Avatar,
@@ -118,42 +114,13 @@ func (s *Store) GetUserByID(ctx context.Context, id uint) (*User, error) {
 // GetUserByUsername 根据用户名检索用户
 func (s *Store) GetUserByUsername(ctx context.Context, username string) (*User, error) {
 	user := &User{}
-	query := "SELECT id, created_at, updated_at, deleted_at, username, email, password_hash, nickname, avatar, bio, role FROM users WHERE username = ? AND deleted_at IS NULL"
+	query := "SELECT id, created_at, updated_at, deleted_at, username, password_hash, nickname, avatar, bio, role FROM users WHERE username = ? AND deleted_at IS NULL"
 	err := s.db.QueryRowContext(ctx, query, username).Scan(
 		&user.ID,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 		&user.DeletedAt,
 		&user.Username,
-		&user.Email,
-		&user.PasswordHash,
-		&user.Nickname,
-		&user.Avatar,
-		&user.Bio,
-		&user.Role,
-	)
-
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
-		}
-		return nil, err
-	}
-
-	return user, nil
-}
-
-// GetUserByEmail 根据邮箱检索用户
-func (s *Store) GetUserByEmail(ctx context.Context, email string) (*User, error) {
-	user := &User{}
-	query := "SELECT id, created_at, updated_at, deleted_at, username, email, password_hash, nickname, avatar, bio, role FROM users WHERE email = ? AND deleted_at IS NULL"
-	err := s.db.QueryRowContext(ctx, query, email).Scan(
-		&user.ID,
-		&user.CreatedAt,
-		&user.UpdatedAt,
-		&user.DeletedAt,
-		&user.Username,
-		&user.Email,
 		&user.PasswordHash,
 		&user.Nickname,
 		&user.Avatar,
@@ -173,7 +140,7 @@ func (s *Store) GetUserByEmail(ctx context.Context, email string) (*User, error)
 
 // ListUsers 检索所有用户
 func (s *Store) ListUsers(ctx context.Context) ([]*User, error) {
-	query := "SELECT id, created_at, updated_at, deleted_at, username, email, password_hash, nickname, avatar, bio, role FROM users WHERE deleted_at IS NULL ORDER BY created_at DESC"
+	query := "SELECT id, created_at, updated_at, deleted_at, username, password_hash, nickname, avatar, bio, role FROM users WHERE deleted_at IS NULL ORDER BY created_at DESC"
 	rows, err := s.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
@@ -189,7 +156,6 @@ func (s *Store) ListUsers(ctx context.Context) ([]*User, error) {
 			&user.UpdatedAt,
 			&user.DeletedAt,
 			&user.Username,
-			&user.Email,
 			&user.PasswordHash,
 			&user.Nickname,
 			&user.Avatar,
@@ -211,8 +177,8 @@ func (s *Store) ListUsers(ctx context.Context) ([]*User, error) {
 
 // UpdateUser 更新数据库中的现有用户
 func (s *Store) UpdateUser(ctx context.Context, user *User) (*User, error) {
-	query := "UPDATE users SET username = ?, email = ?, password_hash = ?, nickname = ?, avatar = ?, bio = ?, role = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND deleted_at IS NULL"
-	_, err := s.db.ExecContext(ctx, query, user.Username, user.Email, user.PasswordHash, user.Nickname, user.Avatar, user.Bio, user.Role, user.ID)
+	query := "UPDATE users SET username = ?, password_hash = ?, nickname = ?, avatar = ?, bio = ?, role = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND deleted_at IS NULL"
+	_, err := s.db.ExecContext(ctx, query, user.Username, user.PasswordHash, user.Nickname, user.Avatar, user.Bio, user.Role, user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -244,10 +210,3 @@ func (s *Store) IsUsernameAvailable(ctx context.Context, username string) (bool,
 	return !exists, err
 }
 
-// IsEmailAvailable 检查邮箱是否可用
-func (s *Store) IsEmailAvailable(ctx context.Context, email string) (bool, error) {
-	var exists bool
-	query := "SELECT EXISTS(SELECT 1 FROM users WHERE email = ? AND deleted_at IS NULL)"
-	err := s.db.QueryRowContext(ctx, query, email).Scan(&exists)
-	return !exists, err
-}

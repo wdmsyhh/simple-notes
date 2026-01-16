@@ -566,8 +566,6 @@ type User struct {
 	Id int64 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
 	// 用户名
 	Username string `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
-	// 邮箱
-	Email string `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
 	// 密码哈希
 	PasswordHash string `protobuf:"bytes,5,opt,name=password_hash,json=passwordHash,proto3" json:"password_hash,omitempty"`
 	// 昵称
@@ -633,13 +631,6 @@ func (x *User) GetId() int64 {
 func (x *User) GetUsername() string {
 	if x != nil {
 		return x.Username
-	}
-	return ""
-}
-
-func (x *User) GetEmail() string {
-	if x != nil {
-		return x.Email
 	}
 	return ""
 }
@@ -1129,12 +1120,11 @@ const file_store_note_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\a \x01(\x03R\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\b \x01(\x03R\tupdatedAt\"\xaa\x02\n" +
+	"updated_at\x18\b \x01(\x03R\tupdatedAt\"\x94\x02\n" +
 	"\x04User\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x0e\n" +
 	"\x02id\x18\x02 \x01(\x03R\x02id\x12\x1a\n" +
-	"\busername\x18\x03 \x01(\tR\busername\x12\x14\n" +
-	"\x05email\x18\x04 \x01(\tR\x05email\x12#\n" +
+	"\busername\x18\x03 \x01(\tR\busername\x12#\n" +
 	"\rpassword_hash\x18\x05 \x01(\tR\fpasswordHash\x12\x1a\n" +
 	"\bnickname\x18\x06 \x01(\tR\bnickname\x12\x16\n" +
 	"\x06avatar\x18\a \x01(\tR\x06avatar\x12\x10\n" +
