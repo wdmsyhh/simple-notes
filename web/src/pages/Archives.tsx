@@ -1,177 +1,113 @@
+/**
+ * Archives 页面组件
+ * 显示所有已发布笔记的归档，按年份分组
+ */
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { noteServiceClient } from '../connect';
+import { create } from '@bufbuild/protobuf';
+import { ListNotesRequestSchema } from '../types/proto/api/v1/note_service_pb';
+import type { Note } from '../types/proto/store/note_pb';
 
+/**
+ * NoteItem 接口
+ * 笔记项的数据结构
+ */
 interface NoteItem {
+  /** 笔记ID */
   id: number;
+  /** 标题 */
   title: string;
+  /** URL友好的标识符 */
   slug: string;
+  /** 创建日期（格式：YYYY/MM/DD） */
   createdAt: string;
 }
 
+/**
+ * ArchiveGroup 接口
+ * 按年份分组的归档数据结构
+ */
 interface ArchiveGroup {
+  /** 年份 */
   year: string;
+  /** 该年份的笔记列表 */
   notes: NoteItem[];
 }
 
 const Archives: React.FC = () => {
+  /** 归档数据，按年份分组 */
   const [archiveData, setArchiveData] = useState<ArchiveGroup[]>([]);
+  /** 加载状态 */
   const [loading, setLoading] = useState(true);
+  /** 错误信息 */
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fetch notes from API and group by year
+    /**
+     * 从 API 获取所有已发布的笔记并按年份分组
+     */
     const fetchArchives = async () => {
       try {
-        // Replace with actual API call
-        const mockNotes: NoteItem[] = [
-          {
-            id: 1,
-            title: "Go CLI 开发利器：Cobra 简明教程",
-            slug: "go-cli-cobra-tutorial",
-            createdAt: "2025/08/30"
-          },
-          {
-            id: 2,
-            title: "Go实战指南：使用 go-redis 执行 Lua 脚本",
-            slug: "go-redis-lua-script",
-            createdAt: "2025/07/15"
-          },
-          {
-            id: 3,
-            title: "基于泛型的轻量级依赖注入工具 do",
-            slug: "golang-generic-di-tool-do",
-            createdAt: "2025/06/30"
-          },
-          {
-            id: 4,
-            title: "使用 gzip 拯救你的 varchar",
-            slug: "use-gzip-save-varchar",
-            createdAt: "2025/06/04"
-          },
-          {
-            id: 5,
-            title: "使用 chromedp 操作 chrome",
-            slug: "use-chromedp-operate-chrome",
-            createdAt: "2025/04/06"
-          },
-          {
-            id: 6,
-            title: "pulsar 介绍及Pulsar Go client 使用指南",
-            slug: "pulsar-go-client-guide",
-            createdAt: "2025/03/31"
-          },
-          {
-            id: 7,
-            title: "[译]Go Protobuf：新的 Opaque API",
-            slug: "go-protobuf-opaque-api",
-            createdAt: "2025/01/31"
-          },
-          {
-            id: 8,
-            title: "Go语言中的迭代器和 iter 包",
-            slug: "go-iterator-iter-package",
-            createdAt: "2024/12/24"
-          },
-          {
-            id: 9,
-            title: "SQL优先的 Go ORM 框架——Bun 介绍",
-            slug: "sql-first-golang-orm-bun",
-            createdAt: "2024/11/30"
-          },
-          {
-            id: 10,
-            title: "ORM 框架 ent 介绍",
-            slug: "golang-orm-ent-introduction",
-            createdAt: "2024/11/07"
-          },
-          {
-            id: 11,
-            title: "[译] Prometheus 运算符",
-            slug: "prometheus-operator",
-            createdAt: "2024/08/04"
-          },
-          {
-            id: 12,
-            title: "[译]查询 Prometheus",
-            slug: "query-prometheus",
-            createdAt: "2024/07/16"
-          },
-          {
-            id: 13,
-            title: "Prometheus 介绍",
-            slug: "prometheus-introduction",
-            createdAt: "2024/07/15"
-          },
-          {
-            id: 14,
-            title: "GORM配置链路追踪",
-            slug: "gorm-tracing-configuration",
-            createdAt: "2024/04/14"
-          },
-          {
-            id: 15,
-            title: "go-redis配置链路追踪",
-            slug: "go-redis-tracing-configuration",
-            createdAt: "2024/04/14"
-          },
-          {
-            id: 16,
-            title: "zap日志库配置链路追踪",
-            slug: "zap-log-tracing-configuration",
-            createdAt: "2024/04/14"
-          },
-          {
-            id: 17,
-            title: "gRPC的链路追踪",
-            slug: "grpc-tracing",
-            createdAt: "2024/04/08"
-          },
-          {
-            id: 18,
-            title: "基于OTel的HTTP链路追踪",
-            slug: "otel-http-tracing",
-            createdAt: "2024/04/08"
-          },
-          {
-            id: 19,
-            title: "Jaeger快速指南",
-            slug: "jaeger-quick-guide",
-            createdAt: "2024/03/24"
-          },
-          {
-            id: 20,
-            title: "OpenTelemetry Go快速指南",
-            slug: "opentelemetry-go-quick-guide",
-            createdAt: "2024/03/17"
-          },
-          {
-            id: 21,
-            title: "OpenTelemetry 介绍",
-            slug: "opentelemetry-introduction",
-            createdAt: "2024/03/17"
-          }
-        ];
+        setLoading(true);
+        setError(null);
 
-        // Group notes by year
-        const grouped = mockNotes.reduce((acc, note) => {
+        // 获取所有已发布的笔记（使用较大的 pageSize 获取所有数据）
+        const notesRequest = create(ListNotesRequestSchema, {
+          page: 1,
+          pageSize: 1000, // 使用较大的值获取所有笔记
+          categoryId: '',
+          tagId: '',
+          search: '',
+          sortBy: 'created_at',
+          sortDesc: true, // 按创建时间降序：最新的在前
+        });
+
+        const notesResponse = await noteServiceClient.listNotes(notesRequest);
+        
+        // 将 Note 转换为 NoteItem 格式
+        const convertedNotes: NoteItem[] = (notesResponse.notes || []).map((note: Note) => {
+          // 将 bigint id 转换为 number
+          const noteId = Number(note.id);
+          // 将时间戳（秒）转换为日期字符串（格式：YYYY/MM/DD）
+          const createdAtTimestamp = note.createdAt 
+            ? Number(note.createdAt) * 1000
+            : Date.now();
+          const date = new Date(createdAtTimestamp);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          const createdAt = `${year}/${month}/${day}`;
+          
+          return {
+            id: noteId,
+            title: note.title || '未命名笔记',
+            slug: note.slug || (noteId ? `note-${noteId}` : ''),
+            createdAt: createdAt,
+          };
+        });
+
+        // 按年份分组
+        const grouped = convertedNotes.reduce((acc, note) => {
           const year = note.createdAt.substring(0, 4);
 
-          // Find year group
+          // 查找年份分组
           let yearGroup = acc.find(group => group.year === year);
           if (!yearGroup) {
             yearGroup = { year, notes: [] };
             acc.push(yearGroup);
           }
 
-          // Add note to year group
+          // 将笔记添加到年份分组
           yearGroup.notes.push(note);
 
           return acc;
         }, [] as ArchiveGroup[]);
 
-        // Sort years in descending order
+        // 按年份降序排序
         grouped.sort((a, b) => parseInt(b.year) - parseInt(a.year));
 
-        // Sort notes by date in descending order
+        // 在每个年份分组内，按日期降序排序
         grouped.forEach(yearGroup => {
           yearGroup.notes.sort((a, b) => {
             return new Date(b.createdAt.replace(/\//g, '-')).getTime() - 
@@ -182,6 +118,8 @@ const Archives: React.FC = () => {
         setArchiveData(grouped);
       } catch (error) {
         console.error('Failed to fetch archives:', error);
+        const errorMessage = error instanceof Error ? error.message : '获取归档数据失败';
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -194,25 +132,42 @@ const Archives: React.FC = () => {
     return <div className="loading">加载中...</div>;
   }
 
+  if (error) {
+    return (
+      <div className="archives">
+        <h1 className="archives-title">文章归档</h1>
+        <div className="error-message" style={{ padding: '20px', background: '#fee', color: '#c33', margin: '20px' }}>
+          <p>错误: {error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="archives">
       <h1 className="archives-title">文章归档</h1>
       <div className="archives-content">
-        {archiveData.map(yearGroup => (
-          <div key={yearGroup.year} className="archive-year">
-            <h2 className="year-title">{yearGroup.year}</h2>
-            <ul className="post-list">
-              {yearGroup.notes.map(note => (
-                <li key={note.id} className="post-item">
-                  <Link to={`/note/${note.id}`}>
-                    <span className="post-date">{note.createdAt}</span>
-                    <span className="post-link">{note.title}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+        {archiveData.length === 0 ? (
+          <div style={{ padding: '20px', textAlign: 'center', color: '#999' }}>
+            暂无归档数据
           </div>
-        ))}
+        ) : (
+          archiveData.map(yearGroup => (
+            <div key={yearGroup.year} className="archive-year">
+              <h2 className="year-title">{yearGroup.year}</h2>
+              <ul className="post-list">
+                {yearGroup.notes.map(note => (
+                  <li key={note.id} className="post-item">
+                    <Link to={`/note/${note.id}`}>
+                      <span className="post-date">{note.createdAt}</span>
+                      <span className="post-link">{note.title}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
