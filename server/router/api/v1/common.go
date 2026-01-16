@@ -5,12 +5,6 @@ import (
 )
 
 // extractIDFromResourceName 从资源名称中提取ID
-// 参数：
-//   name - 资源名称，格式为 "resourceType/id"
-//   expectedType - 预期的资源类型
-// 返回：
-//   int64 - 提取的ID
-//   error - 错误信息
 func extractIDFromResourceName(name, expectedType string) (int64, error) {
 	if name == "" {
 		return 0, fmt.Errorf("resource name is required")

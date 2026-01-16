@@ -13,15 +13,6 @@ import (
 )
 
 // ListCategories 获取分类列表，支持可选的过滤条件
-// 参数：
-//
-//	ctx - 上下文
-//	req - 分类列表请求，包含过滤条件
-//
-// 返回：
-//
-//	[]*store.Category - 分类列表
-//	error - 错误信息
 func (s *Store) ListCategories(ctx context.Context, req *apiv1.ListCategoriesRequest) ([]*store.Category, error) {
 	// 构建查询语句
 	query := `SELECT * FROM categories`
@@ -73,15 +64,6 @@ func (s *Store) ListCategories(ctx context.Context, req *apiv1.ListCategoriesReq
 }
 
 // GetCategory 根据ID获取分类
-// 参数：
-//
-//	ctx - 上下文
-//	categoryID - 分类ID
-//
-// 返回：
-//
-//	*store.Category - 分类信息
-//	error - 错误信息
 func (s *Store) GetCategory(ctx context.Context, categoryID int64) (*store.Category, error) {
 	// 根据ID查询分类
 	query := `SELECT * FROM categories WHERE id = ?`
@@ -99,15 +81,6 @@ func (s *Store) GetCategory(ctx context.Context, categoryID int64) (*store.Categ
 }
 
 // CreateCategory 创建新分类
-// 参数：
-//
-//	ctx - 上下文
-//	category - 分类信息
-//
-// 返回：
-//
-//	*store.Category - 创建的分类信息
-//	error - 错误信息
 func (s *Store) CreateCategory(ctx context.Context, category *store.Category) (*store.Category, error) {
 	now := time.Now()
 	parentID := uint(0)
@@ -145,15 +118,6 @@ func (s *Store) CreateCategory(ctx context.Context, category *store.Category) (*
 }
 
 // UpdateCategory 更新现有分类
-// 参数：
-//
-//	ctx - 上下文
-//	category - 分类信息
-//
-// 返回：
-//
-//	*store.Category - 更新后的分类信息
-//	error - 错误信息
 func (s *Store) UpdateCategory(ctx context.Context, category *store.Category) (*store.Category, error) {
 	parentID := uint(0)
 	if category.ParentId > 0 {
@@ -194,14 +158,6 @@ func (s *Store) UpdateCategory(ctx context.Context, category *store.Category) (*
 }
 
 // DeleteCategory 删除分类
-// 参数：
-//
-//	ctx - 上下文
-//	categoryID - 分类ID
-//
-// 返回：
-//
-//	error - 错误信息
 func (s *Store) DeleteCategory(ctx context.Context, categoryID int64) error {
 	// 检查分类下是否有文章
 	var noteCount int64
@@ -235,15 +191,6 @@ func (s *Store) DeleteCategory(ctx context.Context, categoryID int64) error {
 }
 
 // GetCategoryBySlug 通过slug获取分类
-// 参数：
-//
-//	ctx - 上下文
-//	slug - 分类slug
-//
-// 返回：
-//
-//	*store.Category - 分类信息
-//	error - 错误信息
 func (s *Store) GetCategoryBySlug(ctx context.Context, slug string) (*store.Category, error) {
 	// 根据slug查询分类
 	query := `SELECT * FROM categories WHERE slug = ?`
@@ -263,34 +210,26 @@ func (s *Store) GetCategoryBySlug(ctx context.Context, slug string) (*store.Cate
 // categoryRow 用于扫描数据库行的临时结构体
 type categoryRow struct {
 	// id 分类ID
-	id          uint
+	id uint
 	// createdAt 创建时间
-	createdAt   time.Time
+	createdAt time.Time
 	// updatedAt 更新时间
-	updatedAt   time.Time
+	updatedAt time.Time
 	// deletedAt 删除时间（软删除）
-	deletedAt   sql.NullTime
+	deletedAt sql.NullTime
 	// nameText 分类名称
-	nameText    string
+	nameText string
 	// description 分类描述
 	description string
 	// parentID 父分类ID
-	parentID    uint
+	parentID uint
 	// order 排序顺序
-	order       int
+	order int
 	// visible 是否可见
-	visible     bool
-	}
+	visible bool
+}
 
 // scanCategory 将数据库行扫描到store.Category
-// 参数：
-//
-//	rows - 数据库行（可以是*sql.Row或*sql.Rows）
-//
-// 返回：
-//
-//	*store.Category - 分类信息
-//	error - 错误信息
 func scanCategory(rows interface{}) (*store.Category, error) {
 	var row categoryRow
 

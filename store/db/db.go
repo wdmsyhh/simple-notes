@@ -11,11 +11,6 @@ import (
 )
 
 // NewDBDriver 根据 profile 创建新的数据库驱动
-// 参数：
-//   profile - 服务器配置
-// 返回：
-//   store.Driver - 数据库驱动实例
-//   error - 错误信息
 func NewDBDriver(profile *profile.Profile) (store.Driver, error) {
 	var driver store.Driver
 	var err error

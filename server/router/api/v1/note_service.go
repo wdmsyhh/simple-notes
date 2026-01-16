@@ -17,15 +17,6 @@ import (
 )
 
 // ListNotes 获取笔记列表，支持分页
-// 参数：
-//
-//	ctx - 上下文
-//	req - 笔记列表请求，包含分页和过滤条件
-//
-// 返回：
-//
-//	*apiv1.ListNotesResponse - 笔记列表响应，包含笔记列表、分页信息
-//	error - 错误信息
 func (s *APIV1Service) ListNotes(ctx context.Context, req *apiv1.ListNotesRequest) (*apiv1.ListNotesResponse, error) {
 	// 如果未提供，设置默认分页参数
 	page := req.GetPage()
@@ -93,14 +84,6 @@ func (s *APIV1Service) ListNotes(ctx context.Context, req *apiv1.ListNotesReques
 }
 
 // isNoteVisibleToUser 检查用户是否有权访问指定笔记
-// 参数：
-//
-//	note - 待检查的笔记
-//	user - 当前用户（可能为nil）
-//
-// 返回：
-//
-//	bool - 用户是否有权访问该笔记
 func (s *APIV1Service) isNoteVisibleToUser(note *pbstore.Note, user *store.User) bool {
 	// 公共笔记对所有人可见
 	if note.Visibility == pbstore.NoteVisibility_NOTE_VISIBILITY_PUBLIC {
@@ -123,15 +106,6 @@ func (s *APIV1Service) isNoteVisibleToUser(note *pbstore.Note, user *store.User)
 }
 
 // GetNote 根据ID获取笔记
-// 参数：
-//
-//	ctx - 上下文
-//	req - 获取笔记请求，包含资源名称
-//
-// 返回：
-//
-//	*pbstore.Note - 笔记对象
-//	error - 错误信息
 func (s *APIV1Service) GetNote(ctx context.Context, req *apiv1.GetNoteRequest) (*pbstore.Note, error) {
 	// 从资源名称中提取笔记ID
 	// 资源名称格式: "notes/{note}"
@@ -159,15 +133,6 @@ func (s *APIV1Service) GetNote(ctx context.Context, req *apiv1.GetNoteRequest) (
 }
 
 // CreateNote 创建新笔记
-// 参数：
-//
-//	ctx - 上下文
-//	req - 创建笔记请求，包含笔记信息
-//
-// 返回：
-//
-//	*pbstore.Note - 创建的笔记对象
-//	error - 错误信息
 func (s *APIV1Service) CreateNote(ctx context.Context, req *apiv1.CreateNoteRequest) (*pbstore.Note, error) {
 	// 检查认证
 	currentUser, err := s.fetchCurrentUser(ctx)
@@ -216,15 +181,6 @@ func (s *APIV1Service) CreateNote(ctx context.Context, req *apiv1.CreateNoteRequ
 }
 
 // UpdateNote 更新现有笔记
-// 参数：
-//
-//	ctx - 上下文
-//	req - 更新笔记请求，包含笔记信息
-//
-// 返回：
-//
-//	*pbstore.Note - 更新后的笔记对象
-//	error - 错误信息
 func (s *APIV1Service) UpdateNote(ctx context.Context, req *apiv1.UpdateNoteRequest) (*pbstore.Note, error) {
 	// 检查认证
 	currentUser, err := s.fetchCurrentUser(ctx)
@@ -292,15 +248,6 @@ func (s *APIV1Service) UpdateNote(ctx context.Context, req *apiv1.UpdateNoteRequ
 }
 
 // DeleteNote 删除笔记
-// 参数：
-//
-//	ctx - 上下文
-//	req - 删除笔记请求，包含资源名称
-//
-// 返回：
-//
-//	*emptypb.Empty - 空响应
-//	error - 错误信息
 func (s *APIV1Service) DeleteNote(ctx context.Context, req *apiv1.DeleteNoteRequest) (*emptypb.Empty, error) {
 	// 检查认证
 	currentUser, err := s.fetchCurrentUser(ctx)

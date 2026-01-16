@@ -13,15 +13,6 @@ import (
 )
 
 // ListTags 获取标签列表，支持可选的分页
-// 参数：
-//
-//	ctx - 上下文
-//	req - 标签列表请求，包含分页和过滤条件
-//
-// 返回：
-//
-//	*apiv1.ListTagsResponse - 标签列表响应
-//	error - 错误信息
 func (s *APIV1Service) ListTags(ctx context.Context, req *apiv1.ListTagsRequest) (*apiv1.ListTagsResponse, error) {
 	// 调用存储层获取标签列表
 	tags, total, err := s.Store.ListTags(ctx, req)
@@ -39,15 +30,6 @@ func (s *APIV1Service) ListTags(ctx context.Context, req *apiv1.ListTagsRequest)
 }
 
 // GetTag 根据ID获取标签
-// 参数：
-//
-//	ctx - 上下文
-//	req - 获取标签请求，包含资源名称
-//
-// 返回：
-//
-//	*pbstore.Tag - 标签对象
-//	error - 错误信息
 func (s *APIV1Service) GetTag(ctx context.Context, req *apiv1.GetTagRequest) (*pbstore.Tag, error) {
 	// 从资源名称中提取标签ID
 	tagID, err := extractIDFromResourceName(req.GetName(), "tags")
@@ -68,15 +50,6 @@ func (s *APIV1Service) GetTag(ctx context.Context, req *apiv1.GetTagRequest) (*p
 }
 
 // CreateTag 创建新标签
-// 参数：
-//
-//	ctx - 上下文
-//	req - 创建标签请求，包含标签信息
-//
-// 返回：
-//
-//	*pbstore.Tag - 创建的标签对象
-//	error - 错误信息
 func (s *APIV1Service) CreateTag(ctx context.Context, req *apiv1.CreateTagRequest) (*pbstore.Tag, error) {
 	// 从请求中获取标签信息
 	tag := req.GetTag()
@@ -105,15 +78,6 @@ func (s *APIV1Service) CreateTag(ctx context.Context, req *apiv1.CreateTagReques
 }
 
 // UpdateTag 更新现有标签
-// 参数：
-//
-//	ctx - 上下文
-//	req - 更新标签请求，包含标签信息
-//
-// 返回：
-//
-//	*pbstore.Tag - 更新后的标签对象
-//	error - 错误信息
 func (s *APIV1Service) UpdateTag(ctx context.Context, req *apiv1.UpdateTagRequest) (*pbstore.Tag, error) {
 	// 从请求中获取标签信息
 	tag := req.GetTag()
@@ -147,15 +111,6 @@ func (s *APIV1Service) UpdateTag(ctx context.Context, req *apiv1.UpdateTagReques
 }
 
 // DeleteTag 删除标签
-// 参数：
-//
-//	ctx - 上下文
-//	req - 删除标签请求，包含资源名称
-//
-// 返回：
-//
-//	*emptypb.Empty - 空响应
-//	error - 错误信息
 func (s *APIV1Service) DeleteTag(ctx context.Context, req *apiv1.DeleteTagRequest) (*emptypb.Empty, error) {
 	// 从资源名称中提取标签ID
 	tagID, err := extractIDFromResourceName(req.GetName(), "tags")
@@ -176,15 +131,6 @@ func (s *APIV1Service) DeleteTag(ctx context.Context, req *apiv1.DeleteTagReques
 }
 
 // GetTagBySlug 根据标识获取标签
-// 参数：
-//
-//	ctx - 上下文
-//	req - 根据标识获取标签请求，包含标签标识
-//
-// 返回：
-//
-//	*pbstore.Tag - 标签对象
-//	error - 错误信息
 func (s *APIV1Service) GetTagBySlug(ctx context.Context, req *apiv1.GetTagBySlugRequest) (*pbstore.Tag, error) {
 	slug := req.GetSlug()
 	if slug == "" {
@@ -206,15 +152,6 @@ func (s *APIV1Service) GetTagBySlug(ctx context.Context, req *apiv1.GetTagBySlug
 // TagService 的 Connect 处理器实现
 
 // ListTagsHandler 实现 ListTags 方法的 Connect 处理器
-// 参数：
-//
-//	ctx - 上下文
-//	req - Connect请求，包含标签列表请求信息
-//
-// 返回：
-//
-//	*connect.Response[apiv1.ListTagsResponse] - Connect响应，包含标签列表响应
-//	error - 错误信息
 func (s *APIV1Service) ListTagsHandler(ctx context.Context, req *connect.Request[apiv1.ListTagsRequest]) (*connect.Response[apiv1.ListTagsResponse], error) {
 	// 调用gRPC方法
 	nativeResp, err := s.ListTags(ctx, req.Msg)
@@ -226,15 +163,6 @@ func (s *APIV1Service) ListTagsHandler(ctx context.Context, req *connect.Request
 }
 
 // GetTagHandler 实现 GetTag 方法的 Connect 处理器
-// 参数：
-//
-//	ctx - 上下文
-//	req - Connect请求，包含获取标签请求信息
-//
-// 返回：
-//
-//	*connect.Response[pbstore.Tag] - Connect响应，包含标签对象
-//	error - 错误信息
 func (s *APIV1Service) GetTagHandler(ctx context.Context, req *connect.Request[apiv1.GetTagRequest]) (*connect.Response[pbstore.Tag], error) {
 	// 调用gRPC方法
 	nativeResp, err := s.GetTag(ctx, req.Msg)
@@ -246,15 +174,6 @@ func (s *APIV1Service) GetTagHandler(ctx context.Context, req *connect.Request[a
 }
 
 // CreateTagHandler 实现 CreateTag 方法的 Connect 处理器
-// 参数：
-//
-//	ctx - 上下文
-//	req - Connect请求，包含创建标签请求信息
-//
-// 返回：
-//
-//	*connect.Response[pbstore.Tag] - Connect响应，包含创建的标签对象
-//	error - 错误信息
 func (s *APIV1Service) CreateTagHandler(ctx context.Context, req *connect.Request[apiv1.CreateTagRequest]) (*connect.Response[pbstore.Tag], error) {
 	// 调用gRPC方法
 	nativeResp, err := s.CreateTag(ctx, req.Msg)
@@ -266,15 +185,6 @@ func (s *APIV1Service) CreateTagHandler(ctx context.Context, req *connect.Reques
 }
 
 // UpdateTagHandler 实现 UpdateTag 方法的 Connect 处理器
-// 参数：
-//
-//	ctx - 上下文
-//	req - Connect请求，包含更新标签请求信息
-//
-// 返回：
-//
-//	*connect.Response[pbstore.Tag] - Connect响应，包含更新后的标签对象
-//	error - 错误信息
 func (s *APIV1Service) UpdateTagHandler(ctx context.Context, req *connect.Request[apiv1.UpdateTagRequest]) (*connect.Response[pbstore.Tag], error) {
 	// 调用gRPC方法
 	nativeResp, err := s.UpdateTag(ctx, req.Msg)
@@ -286,15 +196,6 @@ func (s *APIV1Service) UpdateTagHandler(ctx context.Context, req *connect.Reques
 }
 
 // DeleteTagHandler 实现 DeleteTag 方法的 Connect 处理器
-// 参数：
-//
-//	ctx - 上下文
-//	req - Connect请求，包含删除标签请求信息
-//
-// 返回：
-//
-//	*connect.Response[emptypb.Empty] - Connect响应，包含空响应
-//	error - 错误信息
 func (s *APIV1Service) DeleteTagHandler(ctx context.Context, req *connect.Request[apiv1.DeleteTagRequest]) (*connect.Response[emptypb.Empty], error) {
 	// 调用gRPC方法
 	nativeResp, err := s.DeleteTag(ctx, req.Msg)
@@ -306,15 +207,6 @@ func (s *APIV1Service) DeleteTagHandler(ctx context.Context, req *connect.Reques
 }
 
 // GetTagBySlugHandler 实现 GetTagBySlug 方法的 Connect 处理器
-// 参数：
-//
-//	ctx - 上下文
-//	req - Connect请求，包含根据标识获取标签请求信息
-//
-// 返回：
-//
-//	*connect.Response[pbstore.Tag] - Connect响应，包含标签对象
-//	error - 错误信息
 func (s *APIV1Service) GetTagBySlugHandler(ctx context.Context, req *connect.Request[apiv1.GetTagBySlugRequest]) (*connect.Response[pbstore.Tag], error) {
 	// 调用gRPC方法
 	nativeResp, err := s.GetTagBySlug(ctx, req.Msg)

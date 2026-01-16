@@ -32,15 +32,6 @@ type Server struct {
 }
 
 // NewServer 创建一个新的服务器实例
-// 参数：
-//
-//	store - 数据存储实例
-//	profile - 服务器配置
-//	port - 服务器监听端口
-//
-// 返回：
-//
-//	*Server - 创建的服务器实例
 func NewServer(store *store.Store, profile *profile.Profile, port int) *Server {
 	echoServer := echo.New()
 	echoServer.Debug = true
@@ -60,13 +51,6 @@ func NewServer(store *store.Store, profile *profile.Profile, port int) *Server {
 }
 
 // SetupRoutes 配置所有路由和服务
-// 参数：
-//
-//	ctx - 上下文
-//
-// 返回：
-//
-//	error - 错误信息
 func (s *Server) SetupRoutes(ctx context.Context) error {
 	// 注册健康检查端点
 	s.echoServer.GET("/healthz", func(c echo.Context) error {
@@ -97,9 +81,6 @@ func (s *Server) SetupRoutes(ctx context.Context) error {
 }
 
 // Start 启动服务器
-// 返回：
-//
-//	error - 错误信息
 func (s *Server) Start() error {
 	address := fmt.Sprintf(":%d", s.Port)
 	log.Printf("Server starting on %s", address)
@@ -107,13 +88,6 @@ func (s *Server) Start() error {
 }
 
 // Shutdown 优雅关闭服务器
-// 参数：
-//
-//	ctx - 上下文
-//
-// 返回：
-//
-//	error - 错误信息
 func (s *Server) Shutdown(ctx context.Context) error {
 	log.Println("Server shutting down")
 	return s.echoServer.Shutdown(ctx)

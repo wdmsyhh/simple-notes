@@ -18,14 +18,6 @@ type Authenticator struct {
 }
 
 // NewAuthenticator 创建新的认证器实例
-// 参数：
-//
-//	store - 数据存储实例
-//	secret - JWT 密钥
-//
-// 返回：
-//
-//	*Authenticator - 认证器实例
 func NewAuthenticator(store *store.Store, secret string) *Authenticator {
 	return &Authenticator{
 		store:  store,
@@ -34,14 +26,6 @@ func NewAuthenticator(store *store.Store, secret string) *Authenticator {
 }
 
 // AuthenticateByAccessTokenV2 验证短期访问令牌
-// 参数：
-//
-//	accessToken - 访问令牌字符串
-//
-// 返回：
-//
-//	*UserClaims - 用户声明
-//	error - 错误信息
 func (a *Authenticator) AuthenticateByAccessTokenV2(accessToken string) (*UserClaims, error) {
 	claims, err := ParseAccessTokenV2(accessToken, []byte(a.secret))
 	if err != nil {
@@ -69,14 +53,6 @@ type AuthResult struct {
 }
 
 // Authenticate 尝试使用提供的凭据进行认证
-// 参数：
-//
-//	ctx - 上下文
-//	authHeader - 认证头部字符串
-//
-// 返回：
-//
-//	*AuthResult - 认证结果
 func (a *Authenticator) Authenticate(ctx context.Context, authHeader string) *AuthResult {
 	token := ExtractBearerToken(authHeader)
 

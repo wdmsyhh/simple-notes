@@ -26,14 +26,6 @@ type FrontendService struct {
 }
 
 // NewFrontendService 创建新的前端服务实例
-// 参数：
-//
-//	profile - 服务器配置
-//	store - 数据存储实例
-//
-// 返回：
-//
-//	*FrontendService - 前端服务实例
 func NewFrontendService(profile *profile.Profile, store *store.Store) *FrontendService {
 	return &FrontendService{
 		Profile: profile,
@@ -42,10 +34,6 @@ func NewFrontendService(profile *profile.Profile, store *store.Store) *FrontendS
 }
 
 // Serve 启动前端静态文件服务
-// 参数：
-//
-//	ctx - 上下文
-//	e - Echo 服务器实例
 func (*FrontendService) Serve(_ context.Context, e *echo.Echo) {
 	skipper := func(c echo.Context) bool {
 		// 跳过 API 路由
@@ -82,13 +70,6 @@ func (*FrontendService) Serve(_ context.Context, e *echo.Echo) {
 }
 
 // getFileSystem 获取文件系统
-// 参数：
-//
-//	path - 文件路径
-//
-// 返回：
-//
-//	http.FileSystem - HTTP 文件系统
 func getFileSystem(path string) http.FileSystem {
 	fs, err := fs.Sub(embeddedFiles, path)
 	if err != nil {

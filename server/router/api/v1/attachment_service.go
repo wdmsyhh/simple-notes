@@ -21,7 +21,7 @@ import (
 const (
 	// MaxUploadBufferSizeBytes is the maximum upload buffer size (32 MiB)
 	MaxUploadBufferSizeBytes = 32 << 20
-	MebiByte                  = 1024 * 1024
+	MebiByte                 = 1024 * 1024
 )
 
 var (
@@ -34,10 +34,6 @@ var (
 // - 防止路径遍历攻击
 // - 防止文件名以空格或句点开头/结尾
 // - 允许除路径分隔符外的大多数字符
-// 参数：
-//   filename - 文件名
-// 返回：
-//   bool - 文件名是否有效
 func validateFilename(filename string) bool {
 	// 检查长度
 	if len(filename) == 0 || len(filename) > 255 {
@@ -59,21 +55,11 @@ func validateFilename(filename string) bool {
 }
 
 // isValidMimeType 验证 MIME 类型
-// 参数：
-//   mimeType - MIME 类型字符串
-// 返回：
-//   bool - MIME 类型是否有效
 func isValidMimeType(mimeType string) bool {
 	return mimeTypeRegex.MatchString(mimeType)
 }
 
 // CreateAttachment 创建新附件
-// 参数：
-//   ctx - 上下文
-//   req - 创建附件请求
-// 返回：
-//   *apiv1.Attachment - 创建的附件对象
-//   error - 错误信息
 func (s *APIV1Service) CreateAttachment(ctx context.Context, req *apiv1.CreateAttachmentRequest) (*apiv1.Attachment, error) {
 	// 检查认证
 	currentUser, err := s.fetchCurrentUser(ctx)
@@ -132,12 +118,6 @@ func (s *APIV1Service) CreateAttachment(ctx context.Context, req *apiv1.CreateAt
 }
 
 // ListAttachments 列出附件
-// 参数：
-//   ctx - 上下文
-//   req - 列出附件请求
-// 返回：
-//   *apiv1.ListAttachmentsResponse - 附件列表响应
-//   error - 错误信息
 func (s *APIV1Service) ListAttachments(ctx context.Context, req *apiv1.ListAttachmentsRequest) (*apiv1.ListAttachmentsResponse, error) {
 	// 获取当前用户（可选）
 	currentUser, _ := s.fetchCurrentUser(ctx)
@@ -208,12 +188,6 @@ func (s *APIV1Service) ListAttachments(ctx context.Context, req *apiv1.ListAttac
 }
 
 // GetAttachment 根据名称获取附件
-// 参数：
-//   ctx - 上下文
-//   req - 获取附件请求
-// 返回：
-//   *apiv1.Attachment - 附件对象
-//   error - 错误信息
 func (s *APIV1Service) GetAttachment(ctx context.Context, req *apiv1.GetAttachmentRequest) (*apiv1.Attachment, error) {
 	// 获取当前用户（可选）
 	currentUser, _ := s.fetchCurrentUser(ctx)
@@ -245,7 +219,7 @@ func (s *APIV1Service) GetAttachment(ctx context.Context, req *apiv1.GetAttachme
 
 	// 2. 检查当前用户是否是作者
 	if !allowed && currentUser != nil {
-	var authorID uint
+		var authorID uint
 		if _, err := fmt.Sscanf(attachment.AuthorId, "%d", &authorID); err == nil {
 			if currentUser.ID == authorID || currentUser.Role == store.RoleAdmin || currentUser.Role == store.RoleHost {
 				allowed = true
@@ -264,12 +238,6 @@ func (s *APIV1Service) GetAttachment(ctx context.Context, req *apiv1.GetAttachme
 }
 
 // UpdateAttachment 更新附件（例如，将其链接到笔记）
-// 参数：
-//   ctx - 上下文
-//   req - 更新附件请求
-// 返回：
-//   *apiv1.Attachment - 更新后的附件对象
-//   error - 错误信息
 func (s *APIV1Service) UpdateAttachment(ctx context.Context, req *apiv1.UpdateAttachmentRequest) (*apiv1.Attachment, error) {
 	// 检查认证
 	currentUser, err := s.fetchCurrentUser(ctx)
@@ -322,12 +290,6 @@ func (s *APIV1Service) UpdateAttachment(ctx context.Context, req *apiv1.UpdateAt
 }
 
 // DeleteAttachment 删除附件
-// 参数：
-//   ctx - 上下文
-//   req - 删除附件请求
-// 返回：
-//   *emptypb.Empty - 空响应
-//   error - 错误信息
 func (s *APIV1Service) DeleteAttachment(ctx context.Context, req *apiv1.DeleteAttachmentRequest) (*emptypb.Empty, error) {
 	// 检查认证
 	currentUser, err := s.fetchCurrentUser(ctx)
@@ -364,10 +326,6 @@ func (s *APIV1Service) DeleteAttachment(ctx context.Context, req *apiv1.DeleteAt
 }
 
 // convertAttachmentToAPI 将 store.Attachment 转换为 api.v1.Attachment
-// 参数：
-//   storeAttachment - 存储层附件对象
-// 返回：
-//   *apiv1.Attachment - API 附件对象
 func convertAttachmentToAPI(storeAttachment *pbstore.Attachment) *apiv1.Attachment {
 	apiAttachment := &apiv1.Attachment{
 		Name:     storeAttachment.Name,
@@ -388,11 +346,6 @@ func convertAttachmentToAPI(storeAttachment *pbstore.Attachment) *apiv1.Attachme
 }
 
 // timestampToTime 将 unix 时间戳（秒）转换为 time.Time
-// 参数：
-//   ts - unix 时间戳（秒）
-// 返回：
-//   time.Time - 时间对象
 func timestampToTime(ts int64) time.Time {
 	return time.Unix(ts, 0)
 }
-

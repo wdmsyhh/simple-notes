@@ -150,7 +150,7 @@ func (s *Store) DeleteAttachment(ctx context.Context, id int64) error {
 // attachmentRow 用于扫描数据库行的临时结构体
 type attachmentRow struct {
 	// id 附件ID
-	id        uint
+	id uint
 	// createdAt 创建时间
 	createdAt time.Time
 	// updatedAt 更新时间
@@ -158,25 +158,20 @@ type attachmentRow struct {
 	// deletedAt 删除时间（软删除）
 	deletedAt sql.NullTime
 	// filename 文件名
-	filename  string
+	filename string
 	// fileType 文件类型（MIME类型）
-	fileType  string
+	fileType string
 	// size 文件大小（字节）
-	size      int64
+	size int64
 	// blob 文件二进制内容
-	blob      []byte
+	blob []byte
 	// noteID 关联的笔记ID（可选）
-	noteID    sql.NullInt64
+	noteID sql.NullInt64
 	// authorID 作者ID
-	authorID  uint
-	}
+	authorID uint
+}
 
 // scanAttachment 扫描附件数据
-// 参数：
-//   rows - 数据库行（可以是*sql.Row或*sql.Rows）
-// 返回：
-//   *store.Attachment - 附件信息
-//   error - 错误信息
 func scanAttachment(rows interface{}) (*store.Attachment, error) {
 	var row attachmentRow
 
@@ -212,4 +207,3 @@ func scanAttachment(rows interface{}) (*store.Attachment, error) {
 
 	return attachment, nil
 }
-

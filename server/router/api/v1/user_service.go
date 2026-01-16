@@ -18,12 +18,6 @@ import (
 )
 
 // RegisterUser 注册新用户
-// 参数：
-//   ctx - 上下文
-//   request - 注册用户请求
-// 返回：
-//   *storepb.User - 用户对象
-//   error - 错误信息
 func (s *APIV1Service) RegisterUser(ctx context.Context, request *apiv1.RegisterUserRequest) (*storepb.User, error) {
 	// 验证请求
 	if request.User == nil {
@@ -57,12 +51,6 @@ func (s *APIV1Service) RegisterUser(ctx context.Context, request *apiv1.Register
 }
 
 // LoginUser 用户登录
-// 参数：
-//   ctx - 上下文
-//   request - 登录用户请求
-// 返回：
-//   *apiv1.LoginUserResponse - 登录响应
-//   error - 错误信息
 func (s *APIV1Service) LoginUser(ctx context.Context, request *apiv1.LoginUserRequest) (*apiv1.LoginUserResponse, error) {
 	// 验证请求
 	if request.Username == "" || request.Password == "" {
@@ -95,12 +83,6 @@ func (s *APIV1Service) LoginUser(ctx context.Context, request *apiv1.LoginUserRe
 }
 
 // GetUser 根据ID获取用户
-// 参数：
-//   ctx - 上下文
-//   request - 获取用户请求
-// 返回：
-//   *storepb.User - 用户对象
-//   error - 错误信息
 func (s *APIV1Service) GetUser(ctx context.Context, request *apiv1.GetUserRequest) (*storepb.User, error) {
 	// 从资源名称中提取用户ID
 	userID, err := extractUserIDFromName(request.Name)
@@ -121,12 +103,6 @@ func (s *APIV1Service) GetUser(ctx context.Context, request *apiv1.GetUserReques
 }
 
 // GetCurrentUser 获取当前已认证的用户
-// 参数：
-//   ctx - 上下文
-//   request - 获取当前用户请求
-// 返回：
-//   *storepb.User - 用户对象
-//   error - 错误信息
 func (s *APIV1Service) GetCurrentUser(ctx context.Context, request *apiv1.GetCurrentUserRequest) (*storepb.User, error) {
 	// 从上下文中获取用户声明
 	claims := auth.GetUserClaims(ctx)
@@ -147,12 +123,6 @@ func (s *APIV1Service) GetCurrentUser(ctx context.Context, request *apiv1.GetCur
 }
 
 // UpdateUser 更新用户
-// 参数：
-//   ctx - 上下文
-//   request - 更新用户请求
-// 返回：
-//   *storepb.User - 更新后的用户对象
-//   error - 错误信息
 func (s *APIV1Service) UpdateUser(ctx context.Context, request *apiv1.UpdateUserRequest) (*storepb.User, error) {
 	// 从资源名称中提取用户ID
 	userID, err := extractUserIDFromName(request.User.Name)
@@ -207,12 +177,6 @@ func (s *APIV1Service) UpdateUser(ctx context.Context, request *apiv1.UpdateUser
 }
 
 // DeleteUser 删除用户
-// 参数：
-//   ctx - 上下文
-//   request - 删除用户请求
-// 返回：
-//   *emptypb.Empty - 空响应
-//   error - 错误信息
 func (s *APIV1Service) DeleteUser(ctx context.Context, request *apiv1.DeleteUserRequest) (*emptypb.Empty, error) {
 	// 从资源名称中提取用户ID
 	userID, err := extractUserIDFromName(request.Name)
@@ -238,12 +202,6 @@ func (s *APIV1Service) DeleteUser(ctx context.Context, request *apiv1.DeleteUser
 }
 
 // ListUsers 列出用户
-// 参数：
-//   ctx - 上下文
-//   request - 列出用户请求
-// 返回：
-//   *apiv1.ListUsersResponse - 用户列表响应
-//   error - 错误信息
 func (s *APIV1Service) ListUsers(ctx context.Context, request *apiv1.ListUsersRequest) (*apiv1.ListUsersResponse, error) {
 	// 检查权限
 	// 只有管理员可以列出用户
@@ -275,12 +233,6 @@ func (s *APIV1Service) ListUsers(ctx context.Context, request *apiv1.ListUsersRe
 // 辅助函数
 
 // extractUserIDFromName 从资源名称中提取用户ID
-// 格式：users/{user}
-// 参数：
-//   name - 资源名称
-// 返回：
-//   uint - 用户ID
-//   error - 错误信息
 func extractUserIDFromName(name string) (uint, error) {
 	parts := strings.Split(name, "/")
 	if len(parts) != 2 || parts[0] != "users" {
@@ -296,10 +248,6 @@ func extractUserIDFromName(name string) (uint, error) {
 }
 
 // convertUserToProto 将 store.User 转换为 storepb.User
-// 参数：
-//   user - 存储层用户对象
-// 返回：
-//   *storepb.User - protobuf 用户对象
 func convertUserToProto(user *store.User) *storepb.User {
 	return &storepb.User{
 		Name:         fmt.Sprintf("users/%d", user.ID),
@@ -317,10 +265,6 @@ func convertUserToProto(user *store.User) *storepb.User {
 }
 
 // convertUserRoleToProto 将 store.UserRole 转换为 storepb.UserRole
-// 参数：
-//   role - 存储层用户角色
-// 返回：
-//   storepb.UserRole - protobuf 用户角色
 func convertUserRoleToProto(role store.UserRole) storepb.UserRole {
 	switch role {
 	case store.RoleHost:
@@ -335,10 +279,6 @@ func convertUserRoleToProto(role store.UserRole) storepb.UserRole {
 }
 
 // convertUserRoleFromProto 将 storepb.UserRole 转换为 store.UserRole
-// 参数：
-//   role - protobuf 用户角色
-// 返回：
-//   store.UserRole - 存储层用户角色
 func convertUserRoleFromProto(role storepb.UserRole) store.UserRole {
 	switch role {
 	case storepb.UserRole_USER_ROLE_HOST:
@@ -353,11 +293,6 @@ func convertUserRoleFromProto(role storepb.UserRole) store.UserRole {
 }
 
 // fetchCurrentUser 从上下文中检索当前已认证的用户
-// 参数：
-//   ctx - 上下文
-// 返回：
-//   *store.User - 用户对象，如果未找到则返回nil
-//   error - 错误信息
 func (s *APIV1Service) fetchCurrentUser(ctx context.Context) (*store.User, error) {
 	claims := auth.GetUserClaims(ctx)
 	if claims == nil {

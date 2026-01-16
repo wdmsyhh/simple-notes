@@ -41,11 +41,6 @@ type APIV1Service struct {
 }
 
 // NewAPIV1Service 创建一个新的 APIV1Service 实例
-// 参数：
-//   store - 数据存储实例
-// 返回：
-//   *APIV1Service - 创建的服务实例
-
 func NewAPIV1Service(store *store.Store, secret string) *APIV1Service {
 	// 创建用户服务实例
 	userService := service.NewUserService(store)
@@ -58,12 +53,6 @@ func NewAPIV1Service(store *store.Store, secret string) *APIV1Service {
 }
 
 // RegisterGateway 注册 gRPC-Gateway 和 Connect 处理器到给定的 Echo 实例
-// 参数：
-//   ctx - 上下文
-//   echoServer - Echo Web 服务器实例
-// 返回：
-//   error - 注册过程中发生的错误
-
 func (s *APIV1Service) RegisterGateway(ctx context.Context, echoServer *echo.Echo) error {
 	// 创建 gRPC-Gateway 多路复用器
 	gwMux := runtime.NewServeMux()
@@ -109,7 +98,7 @@ func (s *APIV1Service) RegisterGateway(ctx context.Context, echoServer *echo.Ech
 		NewLoggingInterceptor(true), // 启用日志记录以进行调试
 		NewAuthInterceptor(s.Store, s.Secret),
 	)
-	
+
 	// 配置 Connect 处理器选项，支持大文件上传（32MB）
 	const maxMessageSize = 32 << 20 // 32MB
 	connectHandlerOptions := []connect.HandlerOption{
@@ -122,7 +111,7 @@ func (s *APIV1Service) RegisterGateway(ctx context.Context, echoServer *echo.Ech
 			return connect.NewError(connect.CodeInternal, fmt.Errorf("internal server error: %v", p))
 		}),
 	}
-	
+
 	connectMux := http.NewServeMux()
 	// 创建 Connect 服务处理器
 	connectHandler := NewConnectServiceHandler(s)

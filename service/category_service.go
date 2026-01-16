@@ -22,13 +22,6 @@ type CategoryService struct {
 }
 
 // NewCategoryService 创建一个新的 CategoryService 实例
-// 参数：
-//
-//	store - 数据存储实例
-//
-// 返回：
-//
-//	*CategoryService - 创建的分类服务实例
 func NewCategoryService(store *store.Store) *CategoryService {
 	return &CategoryService{
 		store: store,
@@ -36,15 +29,6 @@ func NewCategoryService(store *store.Store) *CategoryService {
 }
 
 // ListCategories 获取分类列表，支持可选的过滤条件
-// 参数：
-//
-//	ctx - 上下文
-//	req - 分类列表请求，包含过滤条件
-//
-// 返回：
-//
-//	*apiv1.ListCategoriesResponse - 分类列表响应
-//	error - 错误信息
 func (s *CategoryService) ListCategories(ctx context.Context, req *apiv1.ListCategoriesRequest) (*apiv1.ListCategoriesResponse, error) {
 	// 调用存储层
 	categories, err := s.store.ListCategories(ctx, req)
@@ -61,15 +45,6 @@ func (s *CategoryService) ListCategories(ctx context.Context, req *apiv1.ListCat
 }
 
 // GetCategory 根据ID获取分类
-// 参数：
-//
-//	ctx - 上下文
-//	req - 获取分类请求，包含资源名称
-//
-// 返回：
-//
-//	*pbstore.Category - 分类信息
-//	error - 错误信息
 func (s *CategoryService) GetCategory(ctx context.Context, req *apiv1.GetCategoryRequest) (*pbstore.Category, error) {
 	// 从资源名称中提取分类ID
 	categoryID, err := extractIDFromResourceName(req.GetName(), "categories")
@@ -90,15 +65,6 @@ func (s *CategoryService) GetCategory(ctx context.Context, req *apiv1.GetCategor
 }
 
 // CreateCategory 创建新分类
-// 参数：
-//
-//	ctx - 上下文
-//	req - 创建分类请求，包含分类信息
-//
-// 返回：
-//
-//	*pbstore.Category - 创建的分类信息
-//	error - 错误信息
 func (s *CategoryService) CreateCategory(ctx context.Context, req *apiv1.CreateCategoryRequest) (*pbstore.Category, error) {
 	// 从请求中获取分类
 	category := req.GetCategory()
@@ -128,15 +94,6 @@ func (s *CategoryService) CreateCategory(ctx context.Context, req *apiv1.CreateC
 }
 
 // UpdateCategory 更新现有分类
-// 参数：
-//
-//	ctx - 上下文
-//	req - 更新分类请求，包含分类信息
-//
-// 返回：
-//
-//	*pbstore.Category - 更新后的分类信息
-//	error - 错误信息
 func (s *CategoryService) UpdateCategory(ctx context.Context, req *apiv1.UpdateCategoryRequest) (*pbstore.Category, error) {
 	// 从请求中获取分类
 	category := req.GetCategory()
@@ -170,15 +127,6 @@ func (s *CategoryService) UpdateCategory(ctx context.Context, req *apiv1.UpdateC
 }
 
 // DeleteCategory 删除分类
-// 参数：
-//
-//	ctx - 上下文
-//	req - 删除分类请求，包含资源名称
-//
-// 返回：
-//
-//	*emptypb.Empty - 空响应
-//	error - 错误信息
 func (s *CategoryService) DeleteCategory(ctx context.Context, req *apiv1.DeleteCategoryRequest) (*emptypb.Empty, error) {
 	// 从资源名称中提取分类ID
 	categoryID, err := extractIDFromResourceName(req.GetName(), "categories")
@@ -195,15 +143,6 @@ func (s *CategoryService) DeleteCategory(ctx context.Context, req *apiv1.DeleteC
 }
 
 // GetCategoryBySlug 通过slug获取分类
-// 参数：
-//
-//	ctx - 上下文
-//	req - 通过slug获取分类请求
-//
-// 返回：
-//
-//	*pbstore.Category - 分类信息
-//	error - 错误信息
 func (s *CategoryService) GetCategoryBySlug(ctx context.Context, req *apiv1.GetCategoryBySlugRequest) (*pbstore.Category, error) {
 	slug := req.GetSlug()
 	if slug == "" {

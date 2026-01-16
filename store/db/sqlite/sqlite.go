@@ -18,17 +18,12 @@ import (
 // DB SQLite 数据库驱动实现
 type DB struct {
 	// db 数据库连接实例
-	db      *sql.DB
+	db *sql.DB
 	// profile 服务器配置
 	profile *profile.Profile
 }
 
 // NewDB 打开一个数据库，由数据库驱动名称和驱动特定的数据源名称指定
-// 参数：
-//   profile - 服务器配置
-// 返回：
-//   store.Driver - 数据库驱动实例
-//   error - 错误信息
 func NewDB(profile *profile.Profile) (store.Driver, error) {
 	// 确保在尝试打开数据库之前设置了 DSN
 	if profile.DSN == "" {
@@ -66,25 +61,16 @@ func NewDB(profile *profile.Profile) (store.Driver, error) {
 }
 
 // GetDB 获取底层数据库连接
-// 返回：
-//   *sql.DB - 数据库连接实例
 func (d *DB) GetDB() *sql.DB {
 	return d.db
 }
 
 // Close 关闭数据库连接
-// 返回：
-//   error - 错误信息
 func (d *DB) Close() error {
 	return d.db.Close()
 }
 
 // IsInitialized 检查数据库是否已初始化
-// 参数：
-//   ctx - 上下文
-// 返回：
-//   bool - 是否已初始化
-//   error - 错误信息
 func (d *DB) IsInitialized(ctx context.Context) (bool, error) {
 	// 通过检查 notes 表是否存在来检查数据库是否已初始化
 	var exists bool

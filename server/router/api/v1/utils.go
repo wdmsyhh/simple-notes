@@ -7,14 +7,6 @@ import (
 )
 
 // generateSlug 从标题生成URL友好的slug
-// 如果标题为空或仅包含非ASCII字符，则使用基于时间戳的slug
-// 参数：
-//
-//	title - 标题字符串
-//
-// 返回：
-//
-//	string - 生成的slug
 func generateSlug(title string) string {
 	if title == "" {
 		return generateTimestampSlug()
@@ -44,9 +36,6 @@ func generateSlug(title string) string {
 }
 
 // generateTimestampSlug 基于时间戳生成slug
-// 返回：
-//
-//	string - 基于时间戳的slug
 func generateTimestampSlug() string {
 	return "note-" + strings.ReplaceAll(time.Now().Format("20060102150405"), "-", "")
 }

@@ -20,22 +20,11 @@ type ConnectServiceHandler struct {
 }
 
 // NewConnectServiceHandler 创建一个新的 Connect 服务处理器
-// 参数：
-//
-//	svc - APIV1Service 实例
-//
-// 返回：
-//
-//	*ConnectServiceHandler - 新创建的 Connect 服务处理器
 func NewConnectServiceHandler(svc *APIV1Service) *ConnectServiceHandler {
 	return &ConnectServiceHandler{APIV1Service: svc}
 }
 
 // RegisterConnectHandlers 在给定的多路复用器上注册所有 Connect 服务处理器
-// 参数：
-//
-//	mux - HTTP 多路复用器
-//	opts - Connect 处理器选项
 func (s *ConnectServiceHandler) RegisterConnectHandlers(mux *http.ServeMux, opts ...connect.HandlerOption) {
 	// 直接注册所有服务处理器
 	mux.Handle(apiv1connect.NewNoteServiceHandler(s, opts...))
@@ -46,14 +35,6 @@ func (s *ConnectServiceHandler) RegisterConnectHandlers(mux *http.ServeMux, opts
 }
 
 // wrap 将 (path, handler) 返回值转换为结构体，以便更清晰地迭代
-// 参数：
-//
-//	path - HTTP 路径
-//	handler - HTTP 处理器
-//
-// 返回：
-//
-//	struct{path string; handler http.Handler} - 包含路径和处理器的结构体
 func wrap(path string, handler http.Handler) struct {
 	path    string
 	handler http.Handler

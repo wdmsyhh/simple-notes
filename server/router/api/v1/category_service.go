@@ -13,15 +13,6 @@ import (
 )
 
 // ListCategories 获取分类列表，支持可选的过滤条件
-// 参数：
-//
-//	ctx - 上下文
-//	req - 分类列表请求，包含过滤条件
-//
-// 返回：
-//
-//	*apiv1.ListCategoriesResponse - 分类列表响应
-//	error - 错误信息
 func (s *APIV1Service) ListCategories(ctx context.Context, req *apiv1.ListCategoriesRequest) (*apiv1.ListCategoriesResponse, error) {
 	// 调用存储层获取分类列表
 	categories, err := s.Store.ListCategories(ctx, req)
@@ -38,15 +29,6 @@ func (s *APIV1Service) ListCategories(ctx context.Context, req *apiv1.ListCatego
 }
 
 // GetCategory 根据ID获取分类
-// 参数：
-//
-//	ctx - 上下文
-//	req - 获取分类请求，包含资源名称
-//
-// 返回：
-//
-//	*pbstore.Category - 分类对象
-//	error - 错误信息
 func (s *APIV1Service) GetCategory(ctx context.Context, req *apiv1.GetCategoryRequest) (*pbstore.Category, error) {
 	// 从资源名称中提取分类ID
 	categoryID, err := extractIDFromResourceName(req.GetName(), "categories")
@@ -67,15 +49,6 @@ func (s *APIV1Service) GetCategory(ctx context.Context, req *apiv1.GetCategoryRe
 }
 
 // CreateCategory 创建新分类
-// 参数：
-//
-//	ctx - 上下文
-//	req - 创建分类请求，包含分类信息
-//
-// 返回：
-//
-//	*pbstore.Category - 创建的分类对象
-//	error - 错误信息
 func (s *APIV1Service) CreateCategory(ctx context.Context, req *apiv1.CreateCategoryRequest) (*pbstore.Category, error) {
 	// 从请求中获取分类信息
 	category := req.GetCategory()
@@ -104,15 +77,6 @@ func (s *APIV1Service) CreateCategory(ctx context.Context, req *apiv1.CreateCate
 }
 
 // UpdateCategory 更新现有分类
-// 参数：
-//
-//	ctx - 上下文
-//	req - 更新分类请求，包含分类信息
-//
-// 返回：
-//
-//	*pbstore.Category - 更新后的分类对象
-//	error - 错误信息
 func (s *APIV1Service) UpdateCategory(ctx context.Context, req *apiv1.UpdateCategoryRequest) (*pbstore.Category, error) {
 	// 从请求中获取分类信息
 	category := req.GetCategory()
@@ -146,15 +110,6 @@ func (s *APIV1Service) UpdateCategory(ctx context.Context, req *apiv1.UpdateCate
 }
 
 // DeleteCategory 删除分类
-// 参数：
-//
-//	ctx - 上下文
-//	req - 删除分类请求，包含资源名称
-//
-// 返回：
-//
-//	*emptypb.Empty - 空响应
-//	error - 错误信息
 func (s *APIV1Service) DeleteCategory(ctx context.Context, req *apiv1.DeleteCategoryRequest) (*emptypb.Empty, error) {
 	// 从资源名称中提取分类ID
 	categoryID, err := extractIDFromResourceName(req.GetName(), "categories")
@@ -175,15 +130,6 @@ func (s *APIV1Service) DeleteCategory(ctx context.Context, req *apiv1.DeleteCate
 }
 
 // GetCategoryBySlug 根据标识获取分类
-// 参数：
-//
-//	ctx - 上下文
-//	req - 根据标识获取分类请求，包含分类标识
-//
-// 返回：
-//
-//	*pbstore.Category - 分类对象
-//	error - 错误信息
 func (s *APIV1Service) GetCategoryBySlug(ctx context.Context, req *apiv1.GetCategoryBySlugRequest) (*pbstore.Category, error) {
 	slug := req.GetSlug()
 	if slug == "" {
@@ -230,15 +176,6 @@ func generateSlugFromName(name string) string {
 // CategoryService 的 Connect 处理器实现
 
 // ListCategoriesHandler 实现 ListCategories 方法的 Connect 处理器
-// 参数：
-//
-//	ctx - 上下文
-//	req - Connect请求，包含分类列表请求信息
-//
-// 返回：
-//
-//	*connect.Response[apiv1.ListCategoriesResponse] - Connect响应，包含分类列表响应
-//	error - 错误信息
 func (s *APIV1Service) ListCategoriesHandler(ctx context.Context, req *connect.Request[apiv1.ListCategoriesRequest]) (*connect.Response[apiv1.ListCategoriesResponse], error) {
 	// 调用gRPC方法
 	nativeResp, err := s.ListCategories(ctx, req.Msg)
@@ -250,15 +187,6 @@ func (s *APIV1Service) ListCategoriesHandler(ctx context.Context, req *connect.R
 }
 
 // GetCategoryHandler 实现 GetCategory 方法的 Connect 处理器
-// 参数：
-//
-//	ctx - 上下文
-//	req - Connect请求，包含获取分类请求信息
-//
-// 返回：
-//
-//	*connect.Response[pbstore.Category] - Connect响应，包含分类对象
-//	error - 错误信息
 func (s *APIV1Service) GetCategoryHandler(ctx context.Context, req *connect.Request[apiv1.GetCategoryRequest]) (*connect.Response[pbstore.Category], error) {
 	// 调用gRPC方法
 	nativeResp, err := s.GetCategory(ctx, req.Msg)
@@ -270,15 +198,6 @@ func (s *APIV1Service) GetCategoryHandler(ctx context.Context, req *connect.Requ
 }
 
 // CreateCategoryHandler 实现 CreateCategory 方法的 Connect 处理器
-// 参数：
-//
-//	ctx - 上下文
-//	req - Connect请求，包含创建分类请求信息
-//
-// 返回：
-//
-//	*connect.Response[pbstore.Category] - Connect响应，包含创建的分类对象
-//	error - 错误信息
 func (s *APIV1Service) CreateCategoryHandler(ctx context.Context, req *connect.Request[apiv1.CreateCategoryRequest]) (*connect.Response[pbstore.Category], error) {
 	// 调用gRPC方法
 	nativeResp, err := s.CreateCategory(ctx, req.Msg)
@@ -290,15 +209,6 @@ func (s *APIV1Service) CreateCategoryHandler(ctx context.Context, req *connect.R
 }
 
 // UpdateCategoryHandler 实现 UpdateCategory 方法的 Connect 处理器
-// 参数：
-//
-//	ctx - 上下文
-//	req - Connect请求，包含更新分类请求信息
-//
-// 返回：
-//
-//	*connect.Response[pbstore.Category] - Connect响应，包含更新后的分类对象
-//	error - 错误信息
 func (s *APIV1Service) UpdateCategoryHandler(ctx context.Context, req *connect.Request[apiv1.UpdateCategoryRequest]) (*connect.Response[pbstore.Category], error) {
 	// 调用gRPC方法
 	nativeResp, err := s.UpdateCategory(ctx, req.Msg)
@@ -310,15 +220,6 @@ func (s *APIV1Service) UpdateCategoryHandler(ctx context.Context, req *connect.R
 }
 
 // DeleteCategoryHandler 实现 DeleteCategory 方法的 Connect 处理器
-// 参数：
-//
-//	ctx - 上下文
-//	req - Connect请求，包含删除分类请求信息
-//
-// 返回：
-//
-//	*connect.Response[emptypb.Empty] - Connect响应，包含空响应
-//	error - 错误信息
 func (s *APIV1Service) DeleteCategoryHandler(ctx context.Context, req *connect.Request[apiv1.DeleteCategoryRequest]) (*connect.Response[emptypb.Empty], error) {
 	// 调用gRPC方法
 	nativeResp, err := s.DeleteCategory(ctx, req.Msg)
@@ -330,15 +231,6 @@ func (s *APIV1Service) DeleteCategoryHandler(ctx context.Context, req *connect.R
 }
 
 // GetCategoryBySlugHandler 实现 GetCategoryBySlug 方法的 Connect 处理器
-// 参数：
-//
-//	ctx - 上下文
-//	req - Connect请求，包含根据标识获取分类请求信息
-//
-// 返回：
-//
-//	*connect.Response[pbstore.Category] - Connect响应，包含分类对象
-//	error - 错误信息
 func (s *APIV1Service) GetCategoryBySlugHandler(ctx context.Context, req *connect.Request[apiv1.GetCategoryBySlugRequest]) (*connect.Response[pbstore.Category], error) {
 	// 调用gRPC方法
 	nativeResp, err := s.GetCategoryBySlug(ctx, req.Msg)

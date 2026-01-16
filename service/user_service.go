@@ -18,13 +18,6 @@ type UserService struct {
 }
 
 // NewUserService 创建新的用户服务实例
-// 参数：
-//
-//	store - 数据存储实例
-//
-// 返回：
-//
-//	*UserService - 用户服务实例
 func NewUserService(store *store.Store) *UserService {
 	return &UserService{
 		store: store,
@@ -56,13 +49,6 @@ type UserLoginRequest struct {
 }
 
 // ValidateUserRegistrationRequest 验证用户注册请求
-// 参数：
-//
-//	req - 用户注册请求
-//
-// 返回：
-//
-//	error - 错误信息
 func ValidateUserRegistrationRequest(req *UserRegistrationRequest) error {
 	// 验证用户名
 	if strings.TrimSpace(req.Username) == "" {
@@ -98,14 +84,6 @@ func ValidateUserRegistrationRequest(req *UserRegistrationRequest) error {
 }
 
 // HashPassword 使用 bcrypt 对密码进行哈希
-// 参数：
-//
-//	password - 明文密码
-//
-// 返回：
-//
-//	string - 哈希后的密码
-//	error - 错误信息
 func HashPassword(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -115,29 +93,12 @@ func HashPassword(password string) (string, error) {
 }
 
 // CheckPassword 检查密码是否与哈希匹配
-// 参数：
-//
-//	password - 明文密码
-//	hash - 密码哈希
-//
-// 返回：
-//
-//	bool - 是否匹配
 func CheckPassword(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
 }
 
 // RegisterUser 注册新用户
-// 参数：
-//
-//	ctx - 上下文
-//	req - 用户注册请求
-//
-// 返回：
-//
-//	*store.User - 创建的用户对象
-//	error - 错误信息
 func (s *UserService) RegisterUser(ctx context.Context, req *UserRegistrationRequest) (*store.User, error) {
 	// 验证请求
 	err := ValidateUserRegistrationRequest(req)
@@ -182,15 +143,6 @@ func (s *UserService) RegisterUser(ctx context.Context, req *UserRegistrationReq
 }
 
 // LoginUser 认证用户
-// 参数：
-//
-//	ctx - 上下文
-//	req - 用户登录请求
-//
-// 返回：
-//
-//	*store.User - 用户对象
-//	error - 错误信息
 func (s *UserService) LoginUser(ctx context.Context, req *UserLoginRequest) (*store.User, error) {
 	// 验证请求
 	if strings.TrimSpace(req.Username) == "" || strings.TrimSpace(req.Password) == "" {
@@ -215,131 +167,51 @@ func (s *UserService) LoginUser(ctx context.Context, req *UserLoginRequest) (*st
 }
 
 // GetUserByID 根据ID检索用户
-// 参数：
-//
-//	ctx - 上下文
-//	id - 用户ID
-//
-// 返回：
-//
-//	*store.User - 用户对象
-//	error - 错误信息
 func (s *UserService) GetUserByID(ctx context.Context, id uint) (*store.User, error) {
 	return s.store.GetUserByID(ctx, id)
 }
 
 // GetUserByUsername 根据用户名检索用户
-// 参数：
-//
-//	ctx - 上下文
-//	username - 用户名
-//
-// 返回：
-//
-//	*store.User - 用户对象
-//	error - 错误信息
 func (s *UserService) GetUserByUsername(ctx context.Context, username string) (*store.User, error) {
 	return s.store.GetUserByUsername(ctx, username)
 }
 
 // GetUserByEmail 根据邮箱检索用户
-// 参数：
-//
-//	ctx - 上下文
-//	email - 邮箱地址
-//
-// 返回：
-//
-//	*store.User - 用户对象
-//	error - 错误信息
 func (s *UserService) GetUserByEmail(ctx context.Context, email string) (*store.User, error) {
 	return s.store.GetUserByEmail(ctx, email)
 }
 
 // ListUsers 检索所有用户
-// 参数：
-//
-//	ctx - 上下文
-//
-// 返回：
-//
-//	[]*store.User - 用户列表
-//	error - 错误信息
 func (s *UserService) ListUsers(ctx context.Context) ([]*store.User, error) {
 	return s.store.ListUsers(ctx)
 }
 
 // UpdateUser 更新用户
-// 参数：
-//
-//	ctx - 上下文
-//	user - 用户对象
-//
-// 返回：
-//
-//	*store.User - 更新后的用户对象
-//	error - 错误信息
 func (s *UserService) UpdateUser(ctx context.Context, user *store.User) (*store.User, error) {
 	return s.store.UpdateUser(ctx, user)
 }
 
 // DeleteUser 删除用户
-// 参数：
-//
-//	ctx - 上下文
-//	id - 用户ID
-//
-// 返回：
-//
-//	error - 错误信息
 func (s *UserService) DeleteUser(ctx context.Context, id uint) error {
 	return s.store.DeleteUser(ctx, id)
 }
 
 // IsSuperUser 检查用户是否是超级用户（HOST 或 ADMIN）
-// 参数：
-//
-//	user - 用户对象
-//
-// 返回：
-//
-//	bool - 是否是超级用户
 func IsSuperUser(user *store.User) bool {
 	return user != nil && (user.Role == store.RoleHost || user.Role == store.RoleAdmin)
 }
 
 // IsHost 检查用户是否是 HOST
-// 参数：
-//
-//	user - 用户对象
-//
-// 返回：
-//
-//	bool - 是否是 HOST
 func IsHost(user *store.User) bool {
 	return user != nil && user.Role == store.RoleHost
 }
 
 // IsAdmin 检查用户是否是 ADMIN
-// 参数：
-//
-//	user - 用户对象
-//
-// 返回：
-//
-//	bool - 是否是 ADMIN
 func IsAdmin(user *store.User) bool {
 	return user != nil && user.Role == store.RoleAdmin
 }
 
 // IsRegularUser 检查用户是否是普通用户
-// 参数：
-//
-//	user - 用户对象
-//
-// 返回：
-//
-//	bool - 是否是普通用户
 func IsRegularUser(user *store.User) bool {
 	return user != nil && user.Role == store.RoleUser
 }

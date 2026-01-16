@@ -22,13 +22,6 @@ type TagService struct {
 }
 
 // NewTagService 创建一个新的 TagService 实例
-// 参数：
-//
-//	store - 数据存储实例
-//
-// 返回：
-//
-//	*TagService - 创建的标签服务实例
 func NewTagService(store *store.Store) *TagService {
 	return &TagService{
 		store: store,
@@ -36,15 +29,6 @@ func NewTagService(store *store.Store) *TagService {
 }
 
 // ListTags 获取标签列表，支持可选的分页
-// 参数：
-//
-//	ctx - 上下文
-//	req - 标签列表请求，包含分页和过滤条件
-//
-// 返回：
-//
-//	*apiv1.ListTagsResponse - 标签列表响应，包含标签列表和总数
-//	error - 错误信息
 func (s *TagService) ListTags(ctx context.Context, req *apiv1.ListTagsRequest) (*apiv1.ListTagsResponse, error) {
 	// 调用存储层
 	tags, total, err := s.store.ListTags(ctx, req)
@@ -62,15 +46,6 @@ func (s *TagService) ListTags(ctx context.Context, req *apiv1.ListTagsRequest) (
 }
 
 // GetTag 根据ID获取标签
-// 参数：
-//
-//	ctx - 上下文
-//	req - 获取标签请求，包含资源名称
-//
-// 返回：
-//
-//	*pbstore.Tag - 标签信息
-//	error - 错误信息
 func (s *TagService) GetTag(ctx context.Context, req *apiv1.GetTagRequest) (*pbstore.Tag, error) {
 	// 从资源名称中提取标签ID
 	tagID, err := extractIDFromResourceName(req.GetName(), "tags")
@@ -91,15 +66,6 @@ func (s *TagService) GetTag(ctx context.Context, req *apiv1.GetTagRequest) (*pbs
 }
 
 // CreateTag 创建新标签
-// 参数：
-//
-//	ctx - 上下文
-//	req - 创建标签请求，包含标签信息
-//
-// 返回：
-//
-//	*pbstore.Tag - 创建的标签信息
-//	error - 错误信息
 func (s *TagService) CreateTag(ctx context.Context, req *apiv1.CreateTagRequest) (*pbstore.Tag, error) {
 	// 从请求中获取标签
 	tag := req.GetTag()
@@ -129,15 +95,6 @@ func (s *TagService) CreateTag(ctx context.Context, req *apiv1.CreateTagRequest)
 }
 
 // UpdateTag 更新现有标签
-// 参数：
-//
-//	ctx - 上下文
-//	req - 更新标签请求，包含标签信息
-//
-// 返回：
-//
-//	*pbstore.Tag - 更新后的标签信息
-//	error - 错误信息
 func (s *TagService) UpdateTag(ctx context.Context, req *apiv1.UpdateTagRequest) (*pbstore.Tag, error) {
 	// 从请求中获取标签
 	tag := req.GetTag()
@@ -171,15 +128,6 @@ func (s *TagService) UpdateTag(ctx context.Context, req *apiv1.UpdateTagRequest)
 }
 
 // DeleteTag 删除标签
-// 参数：
-//
-//	ctx - 上下文
-//	req - 删除标签请求，包含资源名称
-//
-// 返回：
-//
-//	*emptypb.Empty - 空响应
-//	error - 错误信息
 func (s *TagService) DeleteTag(ctx context.Context, req *apiv1.DeleteTagRequest) (*emptypb.Empty, error) {
 	// 从资源名称中提取标签ID
 	tagID, err := extractIDFromResourceName(req.GetName(), "tags")
@@ -196,15 +144,6 @@ func (s *TagService) DeleteTag(ctx context.Context, req *apiv1.DeleteTagRequest)
 }
 
 // GetTagBySlug 通过slug获取标签
-// 参数：
-//
-//	ctx - 上下文
-//	req - 通过slug获取标签请求
-//
-// 返回：
-//
-//	*pbstore.Tag - 标签信息
-//	error - 错误信息
 func (s *TagService) GetTagBySlug(ctx context.Context, req *apiv1.GetTagBySlugRequest) (*pbstore.Tag, error) {
 	slug := req.GetSlug()
 	if slug == "" {

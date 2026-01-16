@@ -11,19 +11,14 @@ import (
 // 提供了对分类、标签、笔记等数据的CRUD操作接口
 type Store struct {
 	// driver 数据库驱动实例
-	driver  Driver
+	driver Driver
 	// profile 服务器配置
 	profile *profile.Profile
 	// db 数据库连接实例
-	db      *sql.DB
+	db *sql.DB
 }
 
 // NewStore 创建一个新的Store实例
-// 参数：
-//   driver - 数据库驱动实例
-//   profile - 服务器配置
-// 返回：
-//   *Store - Store实例
 func NewStore(driver Driver, profile *profile.Profile) *Store {
 	return &Store{
 		driver:  driver,
@@ -43,9 +38,6 @@ func (s *Store) GetDB() *sql.DB {
 }
 
 // RunMigrations 执行数据库迁移，创建所需的表结构
-// 返回：
-//
-//	error - 错误信息
 func (s *Store) RunMigrations() error {
 	// 创建用户表
 	usersTableSQL := `
@@ -197,13 +189,13 @@ func (s *Store) RunMigrations() error {
 		// 如果迁移失败（可能是表不存在或已经是新结构），记录但不中断
 		fmt.Printf("Warning: failed to migrate notes slug removal: %v\n", err)
 	}
-	
+
 	// 迁移现有表：移除 tags 表的 slug 字段
 	if err := s.migrateRemoveTagsSlug(); err != nil {
 		// 如果迁移失败（可能是表不存在或已经是新结构），记录但不中断
 		fmt.Printf("Warning: failed to migrate tags slug removal: %v\n", err)
 	}
-	
+
 	// 迁移现有表：移除 categories 表的 slug 字段
 	if err := s.migrateRemoveCategoriesSlug(); err != nil {
 		// 如果迁移失败（可能是表不存在或已经是新结构），记录但不中断

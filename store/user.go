@@ -47,15 +47,6 @@ type User struct {
 }
 
 // CreateUser 在数据库中创建新用户
-// 参数：
-//
-//	ctx - 上下文
-//	user - 用户对象
-//
-// 返回：
-//
-//	*User - 创建的用户对象
-//	error - 错误信息
 func (s *Store) CreateUser(ctx context.Context, user *User) (*User, error) {
 	// 检查是否已存在相同用户名或邮箱的用户
 	var exists bool
@@ -97,15 +88,6 @@ func (s *Store) CreateUser(ctx context.Context, user *User) (*User, error) {
 }
 
 // GetUserByID 根据ID检索用户
-// 参数：
-//
-//	ctx - 上下文
-//	id - 用户ID
-//
-// 返回：
-//
-//	*User - 用户对象，如果未找到则返回nil
-//	error - 错误信息
 func (s *Store) GetUserByID(ctx context.Context, id uint) (*User, error) {
 	user := &User{}
 	query := "SELECT id, created_at, updated_at, deleted_at, username, email, password_hash, nickname, avatar, bio, role FROM users WHERE id = ? AND deleted_at IS NULL"
@@ -134,15 +116,6 @@ func (s *Store) GetUserByID(ctx context.Context, id uint) (*User, error) {
 }
 
 // GetUserByUsername 根据用户名检索用户
-// 参数：
-//
-//	ctx - 上下文
-//	username - 用户名
-//
-// 返回：
-//
-//	*User - 用户对象，如果未找到则返回nil
-//	error - 错误信息
 func (s *Store) GetUserByUsername(ctx context.Context, username string) (*User, error) {
 	user := &User{}
 	query := "SELECT id, created_at, updated_at, deleted_at, username, email, password_hash, nickname, avatar, bio, role FROM users WHERE username = ? AND deleted_at IS NULL"
@@ -171,15 +144,6 @@ func (s *Store) GetUserByUsername(ctx context.Context, username string) (*User, 
 }
 
 // GetUserByEmail 根据邮箱检索用户
-// 参数：
-//
-//	ctx - 上下文
-//	email - 邮箱地址
-//
-// 返回：
-//
-//	*User - 用户对象，如果未找到则返回nil
-//	error - 错误信息
 func (s *Store) GetUserByEmail(ctx context.Context, email string) (*User, error) {
 	user := &User{}
 	query := "SELECT id, created_at, updated_at, deleted_at, username, email, password_hash, nickname, avatar, bio, role FROM users WHERE email = ? AND deleted_at IS NULL"
@@ -208,14 +172,6 @@ func (s *Store) GetUserByEmail(ctx context.Context, email string) (*User, error)
 }
 
 // ListUsers 检索所有用户
-// 参数：
-//
-//	ctx - 上下文
-//
-// 返回：
-//
-//	[]*User - 用户列表
-//	error - 错误信息
 func (s *Store) ListUsers(ctx context.Context) ([]*User, error) {
 	query := "SELECT id, created_at, updated_at, deleted_at, username, email, password_hash, nickname, avatar, bio, role FROM users WHERE deleted_at IS NULL ORDER BY created_at DESC"
 	rows, err := s.db.QueryContext(ctx, query)
@@ -254,15 +210,6 @@ func (s *Store) ListUsers(ctx context.Context) ([]*User, error) {
 }
 
 // UpdateUser 更新数据库中的现有用户
-// 参数：
-//
-//	ctx - 上下文
-//	user - 用户对象
-//
-// 返回：
-//
-//	*User - 更新后的用户对象
-//	error - 错误信息
 func (s *Store) UpdateUser(ctx context.Context, user *User) (*User, error) {
 	query := "UPDATE users SET username = ?, email = ?, password_hash = ?, nickname = ?, avatar = ?, bio = ?, role = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND deleted_at IS NULL"
 	_, err := s.db.ExecContext(ctx, query, user.Username, user.Email, user.PasswordHash, user.Nickname, user.Avatar, user.Bio, user.Role, user.ID)
@@ -275,14 +222,6 @@ func (s *Store) UpdateUser(ctx context.Context, user *User) (*User, error) {
 }
 
 // DeleteUser 从数据库中删除用户（软删除）
-// 参数：
-//
-//	ctx - 上下文
-//	id - 用户ID
-//
-// 返回：
-//
-//	error - 错误信息
 func (s *Store) DeleteUser(ctx context.Context, id uint) error {
 	query := "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ? AND deleted_at IS NULL"
 	_, err := s.db.ExecContext(ctx, query, id)
@@ -290,14 +229,6 @@ func (s *Store) DeleteUser(ctx context.Context, id uint) error {
 }
 
 // CountUsers 统计数据库中的用户数量
-// 参数：
-//
-//	ctx - 上下文
-//
-// 返回：
-//
-//	int - 用户数量
-//	error - 错误信息
 func (s *Store) CountUsers(ctx context.Context) (int, error) {
 	var count int
 	query := "SELECT COUNT(*) FROM users WHERE deleted_at IS NULL"
@@ -306,15 +237,6 @@ func (s *Store) CountUsers(ctx context.Context) (int, error) {
 }
 
 // IsUsernameAvailable 检查用户名是否可用
-// 参数：
-//
-//	ctx - 上下文
-//	username - 用户名
-//
-// 返回：
-//
-//	bool - 是否可用（true表示可用）
-//	error - 错误信息
 func (s *Store) IsUsernameAvailable(ctx context.Context, username string) (bool, error) {
 	var exists bool
 	query := "SELECT EXISTS(SELECT 1 FROM users WHERE username = ? AND deleted_at IS NULL)"
@@ -323,15 +245,6 @@ func (s *Store) IsUsernameAvailable(ctx context.Context, username string) (bool,
 }
 
 // IsEmailAvailable 检查邮箱是否可用
-// 参数：
-//
-//	ctx - 上下文
-//	email - 邮箱地址
-//
-// 返回：
-//
-//	bool - 是否可用（true表示可用）
-//	error - 错误信息
 func (s *Store) IsEmailAvailable(ctx context.Context, email string) (bool, error) {
 	var exists bool
 	query := "SELECT EXISTS(SELECT 1 FROM users WHERE email = ? AND deleted_at IS NULL)"

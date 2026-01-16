@@ -19,17 +19,12 @@ import (
 // 这对于 Safari 视频/音频播放是必需的
 type FileServerService struct {
 	// Store 数据存储实例
-	Store         *store.Store
+	Store *store.Store
 	// authenticator 认证器实例
 	authenticator *auth.Authenticator
 }
 
 // NewFileServerService 创建新的文件服务器服务实例
-// 参数：
-//   store - 数据存储实例
-//   secret - JWT 密钥
-// 返回：
-//   *FileServerService - 文件服务器服务实例
 func NewFileServerService(store *store.Store, secret string) *FileServerService {
 	return &FileServerService{
 		Store:         store,
@@ -38,8 +33,6 @@ func NewFileServerService(store *store.Store, secret string) *FileServerService 
 }
 
 // RegisterRoutes 注册 HTTP 文件服务路由
-// 参数：
-//   echoServer - Echo 服务器实例
 func (s *FileServerService) RegisterRoutes(echoServer *echo.Echo) {
 	fileGroup := echoServer.Group("/file")
 
@@ -48,11 +41,6 @@ func (s *FileServerService) RegisterRoutes(echoServer *echo.Echo) {
 }
 
 // serveAttachmentFile 使用原生 HTTP 提供附件二进制内容服务
-// 这正确处理了 Safari 视频/音频播放所需的范围请求
-// 参数：
-//   c - Echo 上下文
-// 返回：
-//   error - 错误信息
 func (s *FileServerService) serveAttachmentFile(c echo.Context) error {
 	ctx := c.Request().Context()
 	idParam := c.Param("id")
@@ -145,12 +133,6 @@ func (s *FileServerService) serveAttachmentFile(c echo.Context) error {
 }
 
 // checkAttachmentPermission 验证用户是否有权限访问附件
-// 参数：
-//   ctx - 上下文
-//   c - Echo 上下文
-//   attachment - 附件对象
-// 返回：
-//   error - 错误信息
 func (s *FileServerService) checkAttachmentPermission(ctx context.Context, c echo.Context, attachment *storepb.Attachment) error {
 	// 如果附件未链接到笔记，检查用户是否是作者
 	if attachment.NoteId == "" {
@@ -215,12 +197,6 @@ func (s *FileServerService) checkAttachmentPermission(ctx context.Context, c ech
 
 // getCurrentUser 从 Echo 上下文检索当前已认证的用户
 // 认证优先级：Bearer token（访问令牌 V2 或 PAT）> 刷新令牌 cookie
-// 参数：
-//   ctx - 上下文
-//   c - Echo 上下文
-// 返回：
-//   *store.User - 用户对象
-//   error - 错误信息
 func (s *FileServerService) getCurrentUser(ctx context.Context, c echo.Context) (*store.User, error) {
 	// 首先尝试 Bearer token 认证
 	authHeader := c.Request().Header.Get("Authorization")

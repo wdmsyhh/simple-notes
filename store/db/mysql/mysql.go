@@ -14,19 +14,14 @@ import (
 // DB MySQL 数据库驱动实现
 type DB struct {
 	// db 数据库连接实例
-	db      *sql.DB
+	db *sql.DB
 	// profile 服务器配置
 	profile *profile.Profile
 	// config MySQL配置
-	config  *mysql.Config
+	config *mysql.Config
 }
 
 // NewDB 创建新的MySQL数据库驱动实例
-// 参数：
-//   profile - 服务器配置
-// 返回：
-//   store.Driver - 数据库驱动实例
-//   error - 错误信息
 func NewDB(profile *profile.Profile) (store.Driver, error) {
 	// 打开 MySQL 连接，带参数
 	// multiStatements=true 是迁移所必需的
@@ -51,25 +46,16 @@ func NewDB(profile *profile.Profile) (store.Driver, error) {
 }
 
 // GetDB 获取底层数据库连接
-// 返回：
-//   *sql.DB - 数据库连接实例
 func (d *DB) GetDB() *sql.DB {
 	return d.db
 }
 
 // Close 关闭数据库连接
-// 返回：
-//   error - 错误信息
 func (d *DB) Close() error {
 	return d.db.Close()
 }
 
 // IsInitialized 检查数据库是否已初始化
-// 参数：
-//   ctx - 上下文
-// 返回：
-//   bool - 是否已初始化
-//   error - 错误信息
 func (d *DB) IsInitialized(ctx context.Context) (bool, error) {
 	var exists bool
 	err := d.db.QueryRowContext(ctx, "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'notes' AND TABLE_TYPE = 'BASE TABLE')").Scan(&exists)
@@ -80,11 +66,6 @@ func (d *DB) IsInitialized(ctx context.Context) (bool, error) {
 }
 
 // mergeDSN 合并DSN配置，添加必要的参数
-// 参数：
-//   baseDSN - 基础DSN字符串
-// 返回：
-//   string - 合并后的DSN字符串
-//   error - 错误信息
 func mergeDSN(baseDSN string) (string, error) {
 	config, err := mysql.ParseDSN(baseDSN)
 	if err != nil {

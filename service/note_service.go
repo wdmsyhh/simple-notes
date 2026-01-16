@@ -23,13 +23,6 @@ type NoteService struct {
 }
 
 // NewNoteService 创建一个新的 NoteService 实例
-// 参数：
-//
-//	store - 数据存储实例
-//
-// 返回：
-//
-//	*NoteService - 创建的笔记服务实例
 func NewNoteService(store *store.Store) *NoteService {
 	return &NoteService{
 		store: store,
@@ -37,15 +30,6 @@ func NewNoteService(store *store.Store) *NoteService {
 }
 
 // ListNotes 获取笔记列表，支持分页
-// 参数：
-//
-//	ctx - 上下文
-//	req - 笔记列表请求，包含分页和过滤条件
-//
-// 返回：
-//
-//	*apiv1.ListNotesResponse - 笔记列表响应，包含笔记列表、分页信息
-//	error - 错误信息
 func (s *NoteService) ListNotes(ctx context.Context, req *apiv1.ListNotesRequest) (*apiv1.ListNotesResponse, error) {
 	// 如果未提供，设置默认值
 	page := req.GetPage()
@@ -94,15 +78,6 @@ func (s *NoteService) ListNotes(ctx context.Context, req *apiv1.ListNotesRequest
 }
 
 // GetNote 根据ID获取单个笔记
-// 参数：
-//
-//	ctx - 上下文
-//	req - 获取笔记请求，包含资源名称
-//
-// 返回：
-//
-//	*pbstore.Note - 笔记信息
-//	error - 错误信息
 func (s *NoteService) GetNote(ctx context.Context, req *apiv1.GetNoteRequest) (*pbstore.Note, error) {
 	// 从资源名称中提取笔记ID
 	// 资源名称格式："notes/{note}"
@@ -124,15 +99,6 @@ func (s *NoteService) GetNote(ctx context.Context, req *apiv1.GetNoteRequest) (*
 }
 
 // CreateNote 创建新笔记
-// 参数：
-//
-//	ctx - 上下文
-//	req - 创建笔记请求，包含笔记信息
-//
-// 返回：
-//
-//	*pbstore.Note - 创建的笔记信息
-//	error - 错误信息
 func (s *NoteService) CreateNote(ctx context.Context, req *apiv1.CreateNoteRequest) (*pbstore.Note, error) {
 	// 从请求中获取笔记
 	note := req.GetNote()
@@ -162,15 +128,6 @@ func (s *NoteService) CreateNote(ctx context.Context, req *apiv1.CreateNoteReque
 }
 
 // UpdateNote 更新现有笔记
-// 参数：
-//
-//	ctx - 上下文
-//	req - 更新笔记请求，包含笔记信息
-//
-// 返回：
-//
-//	*pbstore.Note - 更新后的笔记信息
-//	error - 错误信息
 func (s *NoteService) UpdateNote(ctx context.Context, req *apiv1.UpdateNoteRequest) (*pbstore.Note, error) {
 	// 从请求中获取笔记
 	note := req.GetNote()
@@ -204,15 +161,6 @@ func (s *NoteService) UpdateNote(ctx context.Context, req *apiv1.UpdateNoteReque
 }
 
 // DeleteNote 删除笔记
-// 参数：
-//
-//	ctx - 上下文
-//	req - 删除笔记请求，包含资源名称
-//
-// 返回：
-//
-//	*emptypb.Empty - 空响应
-//	error - 错误信息
 func (s *NoteService) DeleteNote(ctx context.Context, req *apiv1.DeleteNoteRequest) (*emptypb.Empty, error) {
 	// 从资源名称中提取笔记ID
 	noteID, err := extractIDFromResourceName(req.GetName(), "notes")
@@ -231,16 +179,6 @@ func (s *NoteService) DeleteNote(ctx context.Context, req *apiv1.DeleteNoteReque
 // GetNoteBySlug 已移除，请使用 GetNote 通过 ID 获取笔记
 
 // extractIDFromResourceName 从资源名称中提取数字ID
-// 资源名称格式: "{type}/{id}"
-// 参数：
-//
-//	name - 资源名称
-//	expectedType - 预期的资源类型
-//
-// 返回：
-//
-//	int64 - 提取的ID
-//	error - 错误信息
 func extractIDFromResourceName(name, expectedType string) (int64, error) {
 	if name == "" {
 		return 0, fmt.Errorf("resource name is required")

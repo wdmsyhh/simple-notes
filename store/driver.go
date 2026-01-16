@@ -13,10 +13,5 @@ type Driver interface {
 	// Close 关闭数据库连接
 	Close() error
 	// IsInitialized 检查数据库是否已初始化
-	// 参数：
-	//   ctx - 上下文
-	// 返回：
-	//   bool - 是否已初始化
-	//   error - 错误信息
 	IsInitialized(ctx context.Context) (bool, error)
 }

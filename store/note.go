@@ -13,16 +13,6 @@ import (
 )
 
 // ListNotes 获取笔记列表，支持分页和过滤
-// 参数：
-//
-//	ctx - 上下文
-//	req - 笔记列表请求，包含分页和过滤条件
-//
-// 返回：
-//
-//	[]*store.Note - 笔记列表
-//	int64 - 总记录数
-//	error - 错误信息
 func (s *Store) ListNotes(ctx context.Context, req *ListNotesRequest) ([]*store.Note, int64, error) {
 	// 构建基础查询
 	query := `SELECT DISTINCT p.* FROM notes p`
@@ -112,48 +102,40 @@ func (s *Store) ListNotes(ctx context.Context, req *ListNotesRequest) ([]*store.
 // noteRow 用于扫描数据库行的临时结构体
 type noteRow struct {
 	// id 笔记ID
-	id          uint
+	id uint
 	// createdAt 创建时间
-	createdAt   time.Time
+	createdAt time.Time
 	// updatedAt 更新时间
-	updatedAt   time.Time
+	updatedAt time.Time
 	// deletedAt 删除时间（软删除）
-	deletedAt   sql.NullTime
+	deletedAt sql.NullTime
 	// title 标题
-	title       string
+	title string
 	// content 内容
-	content     sql.NullString
+	content sql.NullString
 	// summary 摘要
-	summary     sql.NullString
+	summary sql.NullString
 	// categoryID 分类ID
-	categoryID  uint
+	categoryID uint
 	// tagIDs 标签ID列表（逗号分隔）
-	tagIDs      string
+	tagIDs string
 	// published 是否已发布
-	published   bool
+	published bool
 	// authorID 作者ID
-	authorID    uint
+	authorID uint
 	// publishedAt 发布时间
 	publishedAt time.Time
 	// coverImage 封面图片URL
-	coverImage  sql.NullString
+	coverImage sql.NullString
 	// readingTime 阅读时间（分钟）
 	readingTime int
 	// viewCount 浏览次数
-	viewCount   int
+	viewCount int
 	// visibility 可见性
-	visibility  string
+	visibility string
 }
 
 // scanNote 将数据库行扫描到store.Note
-// 参数：
-//
-//	rows - 数据库行（可以是*sql.Row或*sql.Rows）
-//
-// 返回：
-//
-//	*store.Note - 笔记信息
-//	error - 错误信息
 func scanNote(rows interface{}) (*store.Note, error) {
 	var row noteRow
 
@@ -253,15 +235,6 @@ func scanNote(rows interface{}) (*store.Note, error) {
 }
 
 // GetNote 根据ID获取笔记
-// 参数：
-//
-//	ctx - 上下文
-//	id - 笔记ID
-//
-// 返回：
-//
-//	*store.Note - 笔记信息
-//	error - 错误信息
 func (s *Store) GetNote(ctx context.Context, id int64) (*store.Note, error) {
 	// 查询笔记
 	query := `SELECT * FROM notes WHERE id = ?`
@@ -278,17 +251,7 @@ func (s *Store) GetNote(ctx context.Context, id int64) (*store.Note, error) {
 	return note, nil
 }
 
-
 // CreateNote 创建新笔记
-// 参数：
-//
-//	ctx - 上下文
-//	note - 笔记信息
-//
-// 返回：
-//
-//	*store.Note - 创建的笔记信息
-//	error - 错误信息
 func (s *Store) CreateNote(ctx context.Context, note *store.Note) (*store.Note, error) {
 	// 开始事务
 	tx, err := s.db.BeginTx(ctx, nil)
@@ -399,15 +362,6 @@ func (s *Store) CreateNote(ctx context.Context, note *store.Note) (*store.Note, 
 }
 
 // UpdateNote 更新现有笔记
-// 参数：
-//
-//	ctx - 上下文
-//	note - 笔记信息
-//
-// 返回：
-//
-//	*store.Note - 更新后的笔记信息
-//	error - 错误信息
 func (s *Store) UpdateNote(ctx context.Context, note *store.Note) (*store.Note, error) {
 	// 开始事务
 	tx, err := s.db.BeginTx(ctx, nil)
@@ -598,14 +552,6 @@ func (s *Store) UpdateNote(ctx context.Context, note *store.Note) (*store.Note, 
 }
 
 // DeleteNote 根据ID删除笔记
-// 参数：
-//
-//	ctx - 上下文
-//	id - 笔记ID
-//
-// 返回：
-//
-//	error - 错误信息
 func (s *Store) DeleteNote(ctx context.Context, id int64) error {
 	// 开始事务
 	tx, err := s.db.BeginTx(ctx, nil)
@@ -684,15 +630,7 @@ type ListNotesRequest struct {
 	IncludeUnpublished bool
 }
 
-
 // parseUint 将字符串转换为uint
-// 参数：
-//
-//	s - 字符串值
-//
-// 返回：
-//
-//	uint - 转换后的uint值
 func parseUint(s string) uint {
 	if s == "" {
 		return 0
@@ -705,13 +643,6 @@ func parseUint(s string) uint {
 }
 
 // convertTimestampToTime 将int64时间戳转换为time.Time
-// 参数：
-//
-//	ts - 时间戳
-//
-// 返回：
-//
-//	time.Time - 转换后的时间
 func convertTimestampToTime(ts int64) time.Time {
 	if ts == 0 {
 		return time.Now()

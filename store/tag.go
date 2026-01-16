@@ -12,16 +12,6 @@ import (
 )
 
 // ListTags 获取标签列表，支持可选的分页
-// 参数：
-//
-//	ctx - 上下文
-//	req - 标签列表请求，包含分页参数
-//
-// 返回：
-//
-//	[]*store.Tag - 标签列表
-//	int64 - 总记录数
-//	error - 错误信息
 func (s *Store) ListTags(ctx context.Context, req *apiv1.ListTagsRequest) ([]*store.Tag, int64, error) {
 	// 构建计数查询
 	countQuery := `SELECT COUNT(*) FROM tags`
@@ -72,15 +62,6 @@ func (s *Store) ListTags(ctx context.Context, req *apiv1.ListTagsRequest) ([]*st
 }
 
 // GetTag 根据ID获取标签
-// 参数：
-//
-//	ctx - 上下文
-//	tagID - 标签ID
-//
-// 返回：
-//
-//	*store.Tag - 标签信息
-//	error - 错误信息
 func (s *Store) GetTag(ctx context.Context, tagID int64) (*store.Tag, error) {
 	// 根据ID查询标签
 	query := `SELECT * FROM tags WHERE id = ?`
@@ -98,15 +79,6 @@ func (s *Store) GetTag(ctx context.Context, tagID int64) (*store.Tag, error) {
 }
 
 // CreateTag 创建新标签
-// 参数：
-//
-//	ctx - 上下文
-//	tag - 标签信息
-//
-// 返回：
-//
-//	*store.Tag - 创建的标签信息
-//	error - 错误信息
 func (s *Store) CreateTag(ctx context.Context, tag *store.Tag) (*store.Tag, error) {
 	now := time.Now()
 
@@ -138,15 +110,6 @@ func (s *Store) CreateTag(ctx context.Context, tag *store.Tag) (*store.Tag, erro
 }
 
 // UpdateTag 更新现有标签
-// 参数：
-//
-//	ctx - 上下文
-//	tag - 标签信息
-//
-// 返回：
-//
-//	*store.Tag - 更新后的标签信息
-//	error - 错误信息
 func (s *Store) UpdateTag(ctx context.Context, tag *store.Tag) (*store.Tag, error) {
 	// 更新标签（不包含 slug 字段）
 	query := `
@@ -179,14 +142,6 @@ func (s *Store) UpdateTag(ctx context.Context, tag *store.Tag) (*store.Tag, erro
 }
 
 // DeleteTag 删除标签
-// 参数：
-//
-//	ctx - 上下文
-//	tagID - 标签ID
-//
-// 返回：
-//
-//	error - 错误信息
 func (s *Store) DeleteTag(ctx context.Context, tagID int64) error {
 	// 检查标签下是否有文章
 	var noteCount int64
@@ -232,15 +187,6 @@ func (s *Store) DeleteTag(ctx context.Context, tagID int64) error {
 }
 
 // GetTagBySlug 通过slug获取标签
-// 参数：
-//
-//	ctx - 上下文
-//	slug - 标签slug
-//
-// 返回：
-//
-//	*store.Tag - 标签信息
-//	error - 错误信息
 func (s *Store) GetTagBySlug(ctx context.Context, slug string) (*store.Tag, error) {
 	// 根据slug查询标签
 	query := `SELECT * FROM tags WHERE slug = ?`
@@ -258,14 +204,6 @@ func (s *Store) GetTagBySlug(ctx context.Context, slug string) (*store.Tag, erro
 }
 
 // IncrementTagCount 增加标签计数
-// 参数：
-//
-//	ctx - 上下文
-//	tagID - 标签ID
-//
-// 返回：
-//
-//	error - 错误信息
 func (s *Store) IncrementTagCount(ctx context.Context, tagID int64) error {
 	// 更新标签计数
 	query := `UPDATE tags SET count = count + 1, updated_at = ? WHERE id = ?`
@@ -287,14 +225,6 @@ func (s *Store) IncrementTagCount(ctx context.Context, tagID int64) error {
 }
 
 // DecrementTagCount 减少标签计数，确保不小于0
-// 参数：
-//
-//	ctx - 上下文
-//	tagID - 标签ID
-//
-// 返回：
-//
-//	error - 错误信息
 func (s *Store) DecrementTagCount(ctx context.Context, tagID int64) error {
 	// 更新标签计数
 	query := `UPDATE tags SET count = GREATEST(count - 1, 0), updated_at = ? WHERE id = ?`
@@ -318,30 +248,22 @@ func (s *Store) DecrementTagCount(ctx context.Context, tagID int64) error {
 // tagRow 用于扫描数据库行的临时结构体
 type tagRow struct {
 	// id 标签ID
-	id          uint
+	id uint
 	// createdAt 创建时间
-	createdAt   time.Time
+	createdAt time.Time
 	// updatedAt 更新时间
-	updatedAt   time.Time
+	updatedAt time.Time
 	// deletedAt 删除时间（软删除）
-	deletedAt   sql.NullTime
+	deletedAt sql.NullTime
 	// nameText 标签名称
-	nameText    string
+	nameText string
 	// description 标签描述
 	description string
 	// count 使用次数
-	count       int
-	}
+	count int
+}
 
 // scanTag 将数据库行扫描到store.Tag
-// 参数：
-//
-//	rows - 数据库行（可以是*sql.Row或*sql.Rows）
-//
-// 返回：
-//
-//	*store.Tag - 标签信息
-//	error - 错误信息
 func scanTag(rows interface{}) (*store.Tag, error) {
 	var row tagRow
 

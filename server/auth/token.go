@@ -28,9 +28,9 @@ const (
 // 这些令牌仅通过签名验证（无状态）
 type AccessTokenClaims struct {
 	// Type 令牌类型，值为 "access"
-	Type     string `json:"type"`
+	Type string `json:"type"`
 	// Role 用户角色
-	Role     string `json:"role"`
+	Role string `json:"role"`
 	// Username 用于显示的用户名
 	Username string `json:"username"`
 	jwt.RegisteredClaims
@@ -39,23 +39,14 @@ type AccessTokenClaims struct {
 // UserClaims 表示来自访问令牌的已认证用户信息
 type UserClaims struct {
 	// UserID 用户ID
-	UserID   int32
+	UserID int32
 	// Username 用户名
 	Username string
 	// Role 用户角色
-	Role     string
+	Role string
 }
 
 // GenerateAccessTokenV2 生成带有用户声明的短期访问令牌
-// 参数：
-//   userID - 用户ID
-//   username - 用户名
-//   role - 用户角色
-//   secret - JWT 密钥
-// 返回：
-//   string - 令牌字符串
-//   time.Time - 过期时间
-//   error - 错误信息
 func GenerateAccessTokenV2(userID int32, username, role string, secret []byte) (string, time.Time, error) {
 	expiresAt := time.Now().Add(AccessTokenDuration)
 
@@ -84,10 +75,6 @@ func GenerateAccessTokenV2(userID int32, username, role string, secret []byte) (
 }
 
 // verifyJWTKeyFunc 返回一个验证签名方法和密钥ID的 jwt.Keyfunc
-// 参数：
-//   secret - JWT 密钥
-// 返回：
-//   jwt.Keyfunc - JWT 密钥函数
 func verifyJWTKeyFunc(secret []byte) jwt.Keyfunc {
 	return func(t *jwt.Token) (any, error) {
 		if t.Method.Alg() != jwt.SigningMethodHS256.Name {
@@ -102,12 +89,6 @@ func verifyJWTKeyFunc(secret []byte) jwt.Keyfunc {
 }
 
 // ParseAccessTokenV2 解析并验证短期访问令牌
-// 参数：
-//   tokenString - 令牌字符串
-//   secret - JWT 密钥
-// 返回：
-//   *AccessTokenClaims - 访问令牌声明
-//   error - 错误信息
 func ParseAccessTokenV2(tokenString string, secret []byte) (*AccessTokenClaims, error) {
 	claims := &AccessTokenClaims{}
 	_, err := jwt.ParseWithClaims(tokenString, claims, verifyJWTKeyFunc(secret),
@@ -124,12 +105,6 @@ func ParseAccessTokenV2(tokenString string, secret []byte) (*AccessTokenClaims, 
 }
 
 // RandomString 返回长度为 n 的随机字符串
-// 参数：
-//   n - 字符串长度
-// 返回：
-//   string - 随机字符串
-//   error - 错误信息
 func RandomString(n int) (string, error) {
 	return util.RandomString(n)
 }
-
