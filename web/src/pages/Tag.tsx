@@ -40,7 +40,7 @@ const Tag: React.FC = () => {
             title: "Go 语言入门教程",
             slug: "go-language-introduction",
             summary: "Go 语言是一门开源的编程语言，它能让构造简单、可靠且高效的软件变得容易。",
-            createdAt: "2023-12-01",
+            createdAt: "2026-01-01",
             readingTime: 5,
             viewCount: 1234
           }

@@ -21,10 +21,10 @@ const Page: React.FC = () => {
         // Replace with actual API call
         const mockPage: PageType = {
           id: 1,
-          title: "关于我们",
-          content: `<h2>简单笔记</h2><p>简单笔记是一个轻量级的博客系统，使用 Go 和 React 技术栈开发。</p><h2>技术栈</h2><ul><li>后端：Go + gRPC</li><li>前端：React + TypeScript</li><li>数据库：SQLite</li></ul>`,
-          createdAt: "2023-12-01",
-          updatedAt: "2023-12-01"
+          title: "关于Simple Notes",
+          content: `<h2>简单笔记</h2><p>简单笔记是一个轻量级的博客系统，使用 Go 和 React 技术栈开发。</p><h2>技术栈</h2><ul><li>后端：Go + gRPC</li><li>前端：React + TypeScript</li><li>数据库：SQLite/MySQL/PostgreSQL</li></ul>`,
+          createdAt: "2026-01-01",
+          updatedAt: "2026-01-01"
         };
 
         setPage(mockPage);
@@ -53,7 +53,6 @@ const Page: React.FC = () => {
           <h1 className="page-title">{page.title}</h1>
           <div className="page-meta">
             <span className="created-at">创建时间：{page.createdAt}</span>
-            <span className="updated-at">更新时间：{page.updatedAt}</span>
           </div>
         </div>
         <div className="page-body" dangerouslySetInnerHTML={{ __html: page.content }} />
