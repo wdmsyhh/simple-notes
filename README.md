@@ -87,11 +87,37 @@ go run cmd/notes/main.go
 **编译并运行：**
 
 ```bash
-# 编译
+# 编译（当前平台）
 go build -o notes cmd/notes/main.go
+
+# 指定 Linux 平台构建（如在 macOS/Windows 下交叉编译用于 Linux 部署）
+GOOS=linux GOARCH=amd64 go build -o notes cmd/notes/main.go
+
+# 查询系统架构
+uname -m
+# 若系统架构是amd64（也叫 x86_64），属于英特尔 / AMD 的 64 位 x86 架构，不是 arm64（aarch64）
+# 若目标为 ARM64（如部分云服务器）
+# GOOS=linux GOARCH=arm64 go build -o notes cmd/notes/main.go
 
 # 运行
 ./notes --port 8080
+```
+
+**后台运行（nohup）：**
+
+关闭终端后仍保持运行，可将输出重定向到日志文件：
+
+```bash
+# 后台运行，输出写入 notes.log
+nohup ./notes --port 8010 > notes.log 2>&1 &
+
+# 查看进程
+ps aux | grep notes
+# 或按端口查看
+lsof -i :8010
+
+# 停止进程（将 <PID> 替换为实际进程 ID）
+kill <PID>
 ```
 
 ### 3. 前端运行

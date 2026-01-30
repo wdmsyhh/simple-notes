@@ -5,17 +5,20 @@
  */
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { ConnectError } from "@connectrpc/connect";
 import { userServiceClient } from "../connect";
 import { create } from "@bufbuild/protobuf";
 import { RegisterUserRequestSchema } from "../types/proto/api/v1/user_service_pb";
 import { LoginUserRequestSchema } from "../types/proto/api/v1/user_service_pb";
 import { UserSchema } from "../types/proto/store/note_pb";
 import { useAuth } from "../contexts/AuthContext";
+import { useSystemSettings } from "../contexts/SystemSettingsContext";
 import "./SignUp.css";
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const { currentUser, login, isInitialized } = useAuth();
+  const { loginEnabled, isLoading: settingsLoading } = useSystemSettings();
   /** 用户名输入 */
   const [username, setUsername] = useState("");
   /** 密码输入 */
@@ -86,16 +89,30 @@ const SignUp: React.FC = () => {
       }
     } catch (err: any) {
       console.error("Signup error:", err);
-      setError(err.message || "注册失败，请检查输入信息");
+      // 只显示 rpc 错误中 desc = 后面的内容（如「注册已禁用」）
+      let errorMessage = "注册失败，请检查输入信息";
+      if (err instanceof ConnectError) {
+        const message = err.message || "";
+        const afterDesc = message.replace(/^.*desc\s*=\s*/i, "").trim();
+        if (afterDesc) {
+          errorMessage = afterDesc;
+        } else if (err?.message) {
+          errorMessage = err.message;
+        }
+      } else if (err?.message) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  if (!isInitialized) {
+  if (!isInitialized || settingsLoading) {
     return <div className="loading">加载中...</div>;
   }
 
+  // 登录/注册已禁用时仍显示注册页，点击注册按钮时由后端返回「注册已禁用」并在此展示
   if (currentUser) {
     return null; // Will redirect
   }

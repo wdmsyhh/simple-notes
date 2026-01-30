@@ -9,11 +9,13 @@ import { userServiceClient } from "../connect";
 import { create } from "@bufbuild/protobuf";
 import { LoginUserRequestSchema } from "../types/proto/api/v1/user_service_pb";
 import { useAuth } from "../contexts/AuthContext";
+import { useSystemSettings } from "../contexts/SystemSettingsContext";
 import "./Login.css";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { currentUser, login, isInitialized } = useAuth();
+  const { loginEnabled, isLoading: settingsLoading } = useSystemSettings();
   /** 用户名输入 */
   const [username, setUsername] = useState("");
   /** 密码输入 */
@@ -57,19 +59,15 @@ const Login: React.FC = () => {
       }
     } catch (err: any) {
       console.error("Login error:", err);
-      // 提取 ConnectError 的错误信息
+      // 只显示 rpc 错误中 desc = 后面的内容（如「登录已禁用」）
       let errorMessage = "登录失败，请检查用户名和密码";
       if (err instanceof ConnectError) {
-        // ConnectError 的 message 可能包含 "[unknown] rpc error: code = Unauthenticated desc = 用户名或密码错误"
-        // 尝试提取 desc 部分
         const message = err.message || "";
-        // 匹配 "desc = 用户名或密码错误" 格式，desc 后面直到字符串末尾的内容
-        const descMatch = message.match(/desc\s*=\s*(.+)$/);
-        if (descMatch && descMatch[1]) {
-          errorMessage = descMatch[1].trim();
-        } else {
-          // 如果没有匹配到，尝试直接使用 message，但清理格式
-          errorMessage = message.replace(/^\[unknown\]\s*rpc error:\s*code\s*=\s*\w+\s*desc\s*=\s*/i, "").trim() || errorMessage;
+        const afterDesc = message.replace(/^.*desc\s*=\s*/i, "").trim();
+        if (afterDesc) {
+          errorMessage = afterDesc;
+        } else if (err?.message) {
+          errorMessage = err.message;
         }
       } else if (err?.message) {
         errorMessage = err.message;
@@ -80,7 +78,7 @@ const Login: React.FC = () => {
     }
   };
 
-  if (!isInitialized) {
+  if (!isInitialized || settingsLoading) {
     return <div className="loading">加载中...</div>;
   }
 

@@ -11,6 +11,9 @@ import (
 	"github.com/wdmsyhh/simple-notes/store"
 )
 
+// ErrLoginDisabled 表示登录/注册已被禁用
+var ErrLoginDisabled = errors.New("登录已禁用")
+
 // UserService 处理用户相关业务逻辑
 type UserService struct {
 	// store 数据存储实例
@@ -95,9 +98,14 @@ func (s *UserService) RegisterUser(ctx context.Context, req *UserRegistrationReq
 		return nil, err
 	}
 
-	// 检查用户注册是否启用
-	// 目前我们假设它总是启用的
-	// 稍后我们将添加设置来控制这一点
+	// 检查登录/注册是否启用
+	loginEnabled, err := s.store.GetLoginEnabled(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !loginEnabled {
+		return nil, ErrLoginDisabled
+	}
 
 	// 对密码进行哈希
 	passwordHash, err := HashPassword(req.Password)
@@ -131,6 +139,7 @@ func (s *UserService) RegisterUser(ctx context.Context, req *UserRegistrationReq
 }
 
 // LoginUser 认证用户
+// 当登录已关闭时，仅允许角色为 HOST（系统管理员，即首个注册用户）登录
 func (s *UserService) LoginUser(ctx context.Context, req *UserLoginRequest) (*store.User, error) {
 	// 验证请求
 	if strings.TrimSpace(req.Username) == "" || strings.TrimSpace(req.Password) == "" {
@@ -149,6 +158,15 @@ func (s *UserService) LoginUser(ctx context.Context, req *UserLoginRequest) (*st
 	// 检查密码
 	if !CheckPassword(req.Password, user.PasswordHash) {
 		return nil, errors.New("invalid username or password")
+	}
+
+	// 登录已关闭时，仅允许 HOST（系统管理员）登录
+	loginEnabled, err := s.store.GetLoginEnabled(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if !loginEnabled && user.Role != store.RoleHost {
+		return nil, ErrLoginDisabled
 	}
 
 	return user, nil

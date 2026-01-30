@@ -30,6 +30,26 @@ service UserService {
   
   // ListUsers 返回分页的用户列表
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  
+  // GetSystemSettings 获取系统设置（如是否允许登录，公开接口）
+  rpc GetSystemSettings(GetSystemSettingsRequest) returns (SystemSettings);
+  
+  // SetSystemSettings 设置系统设置（仅系统管理员 HOST 可调用）
+  rpc SetSystemSettings(SetSystemSettingsRequest) returns (SystemSettings);
+}
+
+// GetSystemSettingsRequest 获取系统设置请求（空）
+message GetSystemSettingsRequest {}
+
+// SetSystemSettingsRequest 设置系统设置请求
+message SetSystemSettingsRequest {
+  SystemSettings settings = 1;
+}
+
+// SystemSettings 系统设置
+message SystemSettings {
+  // 是否允许登录与注册
+  bool login_enabled = 1;
 }
 
 // 用户请求和响应消息

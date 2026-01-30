@@ -5,6 +5,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { SystemSettingsProvider } from './contexts/SystemSettingsContext';
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
@@ -50,9 +51,10 @@ const RootRoute: React.FC = () => {
 const App: React.FC = () => {
   return (
     <AuthProvider>
-      <Router>
-        <div className="app">
-          <Header />
+      <SystemSettingsProvider>
+        <Router>
+          <div className="app">
+            <Header />
           <main className="main-content">
             <div className="container">
               <Routes>
@@ -79,6 +81,7 @@ const App: React.FC = () => {
           </main>
         </div>
       </Router>
+      </SystemSettingsProvider>
     </AuthProvider>
   );
 };

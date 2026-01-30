@@ -2,6 +2,7 @@ package v1
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -27,10 +28,6 @@ func (s *APIV1Service) RegisterUser(ctx context.Context, request *apiv1.Register
 		return nil, status.Errorf(codes.InvalidArgument, "password is required")
 	}
 
-	// 检查用户注册是否启用
-	// 目前我们假设它总是启用的
-	// 稍后我们将添加设置来控制这一点
-
 	// 通过服务层创建用户
 	regReq := &service.UserRegistrationRequest{
 		Username: request.User.Username,
@@ -42,6 +39,9 @@ func (s *APIV1Service) RegisterUser(ctx context.Context, request *apiv1.Register
 
 	user, err := s.userService.RegisterUser(ctx, regReq)
 	if err != nil {
+		if errors.Is(err, service.ErrLoginDisabled) {
+			return nil, status.Errorf(codes.PermissionDenied, "登录已禁用")
+		}
 		return nil, status.Errorf(codes.Internal, "failed to register user: %v", err)
 	}
 
@@ -64,7 +64,9 @@ func (s *APIV1Service) LoginUser(ctx context.Context, request *apiv1.LoginUserRe
 
 	user, err := s.userService.LoginUser(ctx, loginReq)
 	if err != nil {
-		// 返回友好的中文错误信息
+		if errors.Is(err, service.ErrLoginDisabled) {
+			return nil, status.Errorf(codes.PermissionDenied, "登录已禁用")
+		}
 		return nil, status.Errorf(codes.Unauthenticated, "用户名或密码错误")
 	}
 

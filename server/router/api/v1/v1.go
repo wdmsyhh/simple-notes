@@ -86,6 +86,9 @@ func (s *APIV1Service) RegisterGateway(ctx context.Context, echoServer *echo.Ech
 	gwGroup := echoServer.Group("")
 	// 添加 CORS 中间件
 	gwGroup.Use(middleware.CORS())
+	// 系统设置 JSON 接口（需在 /api/v1/* 之前注册以便优先匹配）
+	gwGroup.GET("/api/v1/system/settings", s.getSystemSettingsHandler)
+	gwGroup.POST("/api/v1/system/settings", s.setSystemSettingsHandler)
 	// 将 gRPC-Gateway 多路复用器包装为 Echo 处理器
 	handler := echo.WrapHandler(gwMux)
 

@@ -1,6 +1,7 @@
 package store
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 
@@ -48,6 +49,20 @@ func (s *Store) RunMigrations() error {
 		return s.runPostgresMigrations()
 	default:
 		return fmt.Errorf("unsupported database driver: %s", s.profile.Driver)
+	}
+}
+
+// EnsureDefaultSystemSettings 确保初次启动时插入允许登录的默认数据（若不存在则插入，已存在则忽略）
+func (s *Store) EnsureDefaultSystemSettings(ctx context.Context) error {
+	switch s.profile.Driver {
+	case "sqlite":
+		return s.migrateSystemSettingsSQLite()
+	case "mysql":
+		return s.migrateSystemSettingsMySQL()
+	case "postgres":
+		return s.migrateSystemSettingsPostgres()
+	default:
+		return nil
 	}
 }
 
@@ -177,6 +192,14 @@ func (s *Store) runSQLiteMigrations() error {
 		FOREIGN KEY (author_id) REFERENCES users(id) -- 外键，引用用户
 	);`
 
+	// 系统设置表（key-value，如 login_enabled）
+	systemSettingsTableSQL := `
+	CREATE TABLE IF NOT EXISTS system_settings (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		key_name TEXT NOT NULL UNIQUE,
+		value TEXT
+	);`
+
 	// 执行所有迁移SQL语句
 	migrations := []string{
 		usersTableSQL,
@@ -187,6 +210,7 @@ func (s *Store) runSQLiteMigrations() error {
 		commentsTableSQL,
 		pagesTableSQL,
 		attachmentsTableSQL,
+		systemSettingsTableSQL,
 	}
 
 	for _, migration := range migrations {
@@ -199,6 +223,11 @@ func (s *Store) runSQLiteMigrations() error {
 	// 迁移现有表：移除 users 表的 email 字段
 	if err := s.migrateRemoveUsersEmailSQLite(); err != nil {
 		fmt.Printf("Warning: failed to migrate users email removal: %v\n", err)
+	}
+
+	// 确保 system_settings 有默认值
+	if err := s.migrateSystemSettingsSQLite(); err != nil {
+		fmt.Printf("Warning: failed to migrate system_settings: %v\n", err)
 	}
 
 	return nil
@@ -330,6 +359,14 @@ func (s *Store) runMySQLMigrations() error {
 		FOREIGN KEY (author_id) REFERENCES users(id)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`
 
+	// 系统设置表
+	systemSettingsTableSQL := `
+	CREATE TABLE IF NOT EXISTS system_settings (
+		id INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键',
+		key_name VARCHAR(100) NOT NULL UNIQUE COMMENT '设置键',
+		value TEXT COMMENT '设置值'
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;`
+
 	// 执行所有迁移SQL语句
 	migrations := []string{
 		usersTableSQL,
@@ -340,6 +377,7 @@ func (s *Store) runMySQLMigrations() error {
 		commentsTableSQL,
 		pagesTableSQL,
 		attachmentsTableSQL,
+		systemSettingsTableSQL,
 	}
 
 	for _, migration := range migrations {
@@ -352,6 +390,10 @@ func (s *Store) runMySQLMigrations() error {
 	// 迁移现有表：移除 users 表的 email 字段
 	if err := s.migrateRemoveUsersEmailMySQL(); err != nil {
 		fmt.Printf("Warning: failed to migrate users email removal: %v\n", err)
+	}
+
+	if err := s.migrateSystemSettingsMySQL(); err != nil {
+		fmt.Printf("Warning: failed to migrate system_settings: %v\n", err)
 	}
 
 	return nil
@@ -483,6 +525,14 @@ func (s *Store) runPostgresMigrations() error {
 		FOREIGN KEY (author_id) REFERENCES users(id)
 	);`
 
+	// 系统设置表
+	systemSettingsTableSQL := `
+	CREATE TABLE IF NOT EXISTS system_settings (
+		id SERIAL PRIMARY KEY,
+		key_name VARCHAR(100) NOT NULL UNIQUE,
+		value TEXT
+	);`
+
 	// 执行所有迁移SQL语句
 	migrations := []struct {
 		tableSQL string
@@ -602,6 +652,10 @@ func (s *Store) runPostgresMigrations() error {
 				"COMMENT ON COLUMN attachments.author_id IS '上传者ID，必填'",
 			},
 		},
+		{
+			tableSQL: systemSettingsTableSQL,
+			comments: []string{},
+		},
 	}
 
 	for _, migration := range migrations {
@@ -627,7 +681,29 @@ func (s *Store) runPostgresMigrations() error {
 		fmt.Printf("Warning: failed to migrate users email removal: %v\n", err)
 	}
 
+	if err := s.migrateSystemSettingsPostgres(); err != nil {
+		fmt.Printf("Warning: failed to migrate system_settings: %v\n", err)
+	}
+
 	return nil
+}
+
+// migrateSystemSettingsSQLite 确保 system_settings 存在默认 login_enabled（SQLite）
+func (s *Store) migrateSystemSettingsSQLite() error {
+	_, err := s.db.Exec("INSERT OR IGNORE INTO system_settings (key_name, value) VALUES (?, ?)", "login_enabled", "true")
+	return err
+}
+
+// migrateSystemSettingsMySQL 确保 system_settings 存在默认 login_enabled（MySQL）
+func (s *Store) migrateSystemSettingsMySQL() error {
+	_, err := s.db.Exec("INSERT IGNORE INTO system_settings (key_name, value) VALUES (?, ?)", "login_enabled", "true")
+	return err
+}
+
+// migrateSystemSettingsPostgres 确保 system_settings 存在默认 login_enabled（PostgreSQL）
+func (s *Store) migrateSystemSettingsPostgres() error {
+	_, err := s.db.Exec("INSERT INTO system_settings (key_name, value) VALUES ($1, $2) ON CONFLICT (key_name) DO NOTHING", "login_enabled", "true")
+	return err
 }
 
 // migrateRemoveUsersEmailSQLite 从 users 表中移除 email 字段（SQLite）
